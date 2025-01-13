@@ -1,0 +1,77 @@
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 15%;
+    height: 100%;
+    background-color: var(--primary-color); 
+    color: var(--white-color); 
+    padding: 20px 10px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    transition: transform 0.3s ease; 
+    transform: translateX(-100%); 
+    z-index: 9999;
+}
+
+nav.active {
+    transform: translateX(0); 
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin-bottom: 15px;
+}
+
+nav ul li h4 {
+    font-size: 16px;
+    color: var(--white-color);
+    margin: 0;
+}
+
+nav ul li a {
+    display: block;
+    text-decoration: none;
+    font-size: 14px;
+    color: var(--white-color);
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: var(--secondary-color); 
+    color: var(--white-color);
+}
+
+nav ul ul {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+nav ul ul li a {
+    font-size: 13px;
+    background-color: var(--cadre-color); 
+    color: var(--title-color); 
+}
+
+nav ul ul li a:hover {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+}
+
+#nav-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20px; 
+    height: 100%;
+    z-index: 999;
+    background: transparent;
+    cursor: pointer;
+}

@@ -1,0 +1,83 @@
+html{
+    background-color: var(--background-color);
+
+}
+.page-title {
+    margin: 55px 0 25px;
+    font-size: var(--font-size-large);
+    color: var(--text-color);
+    text-align: center;
+}
+.news-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-large);
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.type-title {
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    margin-bottom: var(--gap-medium);
+}
+
+.news-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--gap-medium);
+}
+
+.news-item {
+    background-color: var(--white-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding-small);
+    box-shadow: var(--box-shadow);
+    border: 4px solid var(--secondary-color);
+    transition: transform 0.3s, box-shadow 0.7s;
+}
+
+.news-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-box-shadow);
+}
+
+/* Titre de l'actualité */
+.news-title {
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: var(--gap-small);
+}
+
+/* Description de l'actualité */
+.news-description {
+    font-size: var(--font-size-small);
+    color: var(--secondary-color);
+    margin-bottom: var(--gap-small);
+}
+
+/* Image de l'actualité */
+.news-image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin-top: var(--gap-small);
+}
+
+/* Message d'erreur */
+.error-message {
+    color: var(--error-color);
+    font-size: var(--font-size-xsmall);
+    text-align: center;
+    margin-top: var(--gap-small);
+}
+
+/* Aucune actualité disponible */
+.news-type p {
+    font-size: var(--font-size-small);
+    color: var(--muted-color);
+    margin-top: var(--gap-small);
+}

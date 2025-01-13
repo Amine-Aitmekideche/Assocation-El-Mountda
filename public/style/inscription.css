@@ -1,0 +1,106 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.signup-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--cadre-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    justify-content: center;
+}
+
+h1 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.message {
+    color: var(--rouge-color);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    text-align: left;
+    font-size: 14px;
+    color: var(--sub-title);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 93%;
+    padding: 10px;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    background-color: var(--white-color);
+    font-size: 14px;
+    color: var(--title-color);
+}
+
+a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-size: 14px;
+    display: inline-block;
+    margin-top: 10px;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+}
+
+button:active {
+    background-color: var(--vert-color);
+}
+
+button:disabled {
+    background-color: var(--sub-title);
+    cursor: not-allowed;
+}
+
+.password-container {
+    position: relative;
+    width: 93%;
+}
+
+.password-container input {
+    width: 100%;
+}
+
+.password-container .show-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}

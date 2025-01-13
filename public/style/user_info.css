@@ -1,0 +1,100 @@
+:root {
+    --primary-color: #87cefa;
+    --secondary-color: #F86F03;
+    --cadre-color: #f7f7f7;
+    --background-color: #FFF4CF;
+    --title-color: #333;
+    --sub-title: #555;
+    --white-color: #fff;
+    --rouge-color : #E60A14;
+    --vert-color: #0E663C;
+}
+
+.user-info-container {
+    background-color: var(--background-color);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: 30px auto;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.user-details {
+    background-color: var(--white-color);
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--cadre-color);
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.user-details h2 {
+    color: var(--primary-color);
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.user-details p {
+    color: var(--sub-title);
+    font-size: 18px;
+    margin: 12px 0;
+}
+
+/* Style des images */
+.user-photo img {
+    max-width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 4px solid var(--primary-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+/* Styles de la photo de l'utilisateur et du nom */
+.user-photo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Pièce d'identité */
+.user-identity {
+    background-color: var(--cadre-color);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    border: 1px solid var(--primary-color);
+    text-align: center;
+}
+
+.user-identity img {
+    max-width: 300px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+    color: var(--rouge-color);
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.button {
+    display: inline-block;
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    padding: 12px 20px;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: var(--primary-color);
+}

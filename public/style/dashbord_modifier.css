@@ -1,0 +1,130 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--title-color);
+}
+
+.modifier-section h2 {
+    color: var(--vert-color);
+    text-align: center;
+    margin-top: 20px;
+    font-size: 24px;
+}
+
+.modifier-section {
+    width: 50%;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: var(--white-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--vert-color);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 5px;
+    background-color: var(--table-cell-color);
+}
+
+.form-group input[type="file"] {
+    padding: 3px;
+}
+
+.form-group input[type="datetime-local"] {
+    padding: 5px;
+}
+
+.form-group select {
+    background-color: var(--white-color);
+    color: var(--title-color);
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.form-actions button {
+    background-color: var(--rouge-color);
+    color: var(--white-color);
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-actions button:hover {
+    background-color: var(--primary-color);
+}
+
+.form-actions button:active {
+    background-color: var(--vert-color);
+}
+
+.form-group img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border: 1px solid black;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: block;
+}
+
+.form-group input[type="file"] {
+    display: none;
+}
+
+.upload-button {
+    background-color: var(--vert-color);
+    color: var(--white-color);
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+    background-color: var(--hover-color);
+}
+
+.upload-button:active {
+    background-color: var(--vert-color);
+}
+
+.preview-image {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
