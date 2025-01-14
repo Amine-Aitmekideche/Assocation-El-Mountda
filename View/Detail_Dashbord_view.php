@@ -41,5 +41,6 @@ class Detail_Dashbord_view {
             echo '<p>Aucune donnée à afficher.</p>';
         }
     }
+    
 }
 ?>

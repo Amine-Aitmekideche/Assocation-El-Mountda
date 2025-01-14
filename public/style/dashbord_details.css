@@ -1,23 +1,9 @@
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: var(--background-color);
-    color: var(--title-color);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    
-}
-
 .detail-section {
-    width: 50%;
+    width: 55%;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    margin: 50px auto;
+    margin: 80px auto;
     background-color: var(--white-color);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
@@ -75,7 +61,7 @@ body {
 }
 
 .form-actions button:hover {
-    background-color: var(--hover-color);
+    background-color: var(--primary-color);
 }
 
 .form-actions button:active {

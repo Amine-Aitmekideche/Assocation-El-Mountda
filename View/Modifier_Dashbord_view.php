@@ -7,7 +7,18 @@ class Modifier_Dashbord_view {
         if (!empty($data)) {
             echo '<div class="modifier-section">';
             echo '<h2>'.$titrePage.'</h2>';
-            echo '<form action="Controller/actionDashbord.php" method="POST" enctype="multipart/form-data">';
+
+            if (isset($_SESSION['errorsModifier']) && !empty($_SESSION['errorsModifier'])) {
+                echo '<div style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
+                foreach ($_SESSION['errors'] as $error) {
+                    echo '<p style="margin: 0; font-size: 14px; font-family: Arial, sans-serif;">&#9888; ' . htmlspecialchars($error) . '</p>';
+                }
+                echo '</div>';
+
+                unset($_SESSION['errorsModifier']);
+            }
+
+            echo '<form action="' . htmlspecialchars($action) . '" method="POST" enctype="multipart/form-data">';
             
             foreach ($fields as $field) {
                 echo '<div class="form-group">';
@@ -28,7 +39,7 @@ class Modifier_Dashbord_view {
                                  alt="Prévisualisation de l\'image" style="display: none; max-width: 100%; border: 1px solid #ddd; border-radius: 8px; margin-top: 10px;"></div>';
                         }
                     
-                        echo '<input type="file" name="' . htmlspecialchars($data[0][$field['attribute']] ?? '') . '" 
+                        echo '<input type="file" name="image" 
                               id="' . htmlspecialchars($field['attribute']) . '" accept="image/*" 
                               onchange="previewImage(event, \'' . htmlspecialchars($field['attribute']) . '\')">';
                     
@@ -89,11 +100,8 @@ class Modifier_Dashbord_view {
             }
             
             echo '<div class="form-actions">';
-            echo '<button type="button" id="action_button" 
-                data-action="' . htmlspecialchars($action) . '" 
-                data-nomclass="' . htmlspecialchars($nomClass) . '" 
-                data-functionname="' . htmlspecialchars($functionName) . '"
-                data-rederection="' . htmlspecialchars($rederection) . '">Enregistrer</button>';
+            echo '<button type="submit">Enregistrer</button>';
+
             echo '<button type="button" onclick="window.location.href=\'' . $rederection . '\';">Annuler</button>';
             echo '</div>';
             echo '</form>';

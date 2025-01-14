@@ -39,32 +39,41 @@ class News_model {
         return $result;
     }
     
-    public function modifier_model($id, $titre, $description, $type, $date_debut, $date_fin, $image) {
+    public function modifier_news_model($id, $titre, $description, $type, $date_debut, $date_fin, $image = null) {
         $db = new dataBase();
         $c = $db->connexion();
-        if ($image){
-            $qtf = "UPDATE News SET titre = ?, description = ?, type = ?, date_debut = ?, date_fin = ? , image = ? WHERE id = ?";
-        }else{
-            $qtf = "UPDATE News SET titre = ?, description = ?, type = ?, date_debut = ?, date_fin = ? WHERE id = ?";
+    
+        try {
+            $query = "UPDATE news SET titre = ?, description = ?, type = ?, date_debut = ?, date_fin = ?";
+            
+            if ($image) {
+                $query .= ", image = ?";
+            }
+            
+            $query .= " WHERE id = ?";
+            $stmt = $c->prepare($query);
+            
+            $stmt->bindParam(1, $titre);
+            $stmt->bindParam(2, $description);
+            $stmt->bindParam(3, $type);
+            $stmt->bindParam(4, $date_debut);
+            $stmt->bindParam(5, $date_fin);
+    
+            if ($image) {
+                $stmt->bindParam(6, $image);
+                $stmt->bindParam(7, $id);
+            } else {
+                $stmt->bindParam(6, $id);
+            }
+    
+            $stmt->execute();
+            $db->deconnexion($c);
+    
+            return true;
+        } catch (Exception $e) {
+            $db->deconnexion($c);
+            return false;
         }
-        
-        $stmt = $c->prepare($qtf);
-        
-        $stmt->bindParam(1, $titre, PDO::PARAM_STR);
-        $stmt->bindParam(2, $description, PDO::PARAM_STR);
-        $stmt->bindParam(3, $type, PDO::PARAM_INT);
-        $stmt->bindParam(4, $date_debut, PDO::PARAM_STR);
-        $stmt->bindParam(5, $date_fin, PDO::PARAM_STR);
-        if ($image){
-            $stmt->bindParam(6, $image, PDO::PARAM_STR);
-            $stmt->bindParam(7, $id, PDO::PARAM_INT);
-        }else{
-            $stmt->bindParam(6, $id, PDO::PARAM_INT);
-        }
-        
-        $result = $stmt->execute();
-        $db->deconnexion($c);
-        return $result;
     }
     
     public function ajouter_model($titre, $description, $type, $date_debut, $date_fin, $image) {
