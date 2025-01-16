@@ -64,98 +64,18 @@ class Partenaire_controller {
     public function modifier_partenaire_controller($id, $nom, $willya, $adresse, $categorie,  $description , $logo = null) {
         $partenaire_model = new Partenaire_model();  
         $result = $partenaire_model->modifier_model($id, $nom, $willya, $adresse, $categorie, $logo, $description);
-        if ($result) {
-            return [
-                'status' => 'true',
-                'message' => 'Modifier partenaire réussi !',
-            ];
-        } else {
-            return [
-                'status' => 'false',
-                'message' => 'Erreur lors de la modification  de partenaire.',
-            ];
-        }
+        
     }
     
-    // public function ajouter_partenaire_controller($nom, $willya, $adresse, $categorie, $description, $logo) {
-    //     $partenaire_model = new Partenaire_model();  
-    //     $dateCreation = new DateTime();  
-    //     $dateTimeString = $dateCreation->format('Y-m-d H:i:s');  
+    public function ajouter_partenaire_controller($nom, $willya, $adresse, $categorie, $description, $logo) {
+        $partenaire_model = new Partenaire_model();  
+        $dateCreation = new DateTime();  
+        $dateTimeString = $dateCreation->format('Y-m-d H:i:s');  
         
-    //     $result = $partenaire_model->ajouter_model($nom, $willya, $adresse, $categorie, $logo, $description,  $dateTimeString);
-        
-    //     if ($result) {
-    //         return [
-    //             'status' => 'true',
-    //             'message' => $result,
-    //         ];
-    //     } else {
-    //         return [
-    //             'status' => 'false',
-    //             'message' => $result,
-    //         ];
-    //     }
-    // }
-    public function ajouter_partenaire_controller($postData, $fileData) {
-        $logFile = __DIR__ . '/log.txt';
-        error_log("je suis dans ajouter partenaire controller", 3, $logFile);
-
-        $response = [
-            'status' => 'false',
-            'message' => 'Une erreur s\'est produite.',
-        ];
-    
-        try {
-            error_log("Données POST : " . print_r($_POST, true), 3, $logFile);
-            error_log("Données FILES : " . print_r($_FILES, true), 3, $logFile);
-    
-            // Récupérer et valider les champs
-            $nom = htmlspecialchars($postData['nom'] ?? '');
-            $willya = htmlspecialchars($postData['willya'] ?? '');
-            $adresse = htmlspecialchars($postData['adresse'] ?? '');
-            $categorie = htmlspecialchars($postData['categorie'] ?? '');
-            $description = htmlspecialchars($postData['description'] ?? '');
-            $pathFile = htmlspecialchars($postData['pathFile'] ?? '');
-            echo $pathFile;
-            // Gérer le fichier uploadé
-            $logo = null;
-
-            if (isset($fileData['logo']) && $fileData['logo']['size'] > 0) {
-                $file = $fileData['logo'];  // Récupérer le fichier logo
-                $path = $pathFile;  // Le répertoire de destination
-
-                // Appel à la méthode chargerFile pour traiter l'upload
-                try {
-                    $uploadedFileName = file_controller::chargerFile($file, htmlspecialchars($path));
-
-                    // Si le fichier a été téléchargé avec succès, générer son chemin complet
-                    if ($uploadedFileName) {
-                        $logo = htmlspecialchars($path . '/' . $uploadedFileName);
-                    }
-                } catch (Exception $e) {
-                    // Si une erreur survient pendant le téléchargement
-                    throw new Exception("Erreur lors du chargement du fichier : " . $e->getMessage());
-                }
-            }
-
-    
-            // Appeler le modèle pour ajouter le partenaire
-            $partenaire_model = new Partenaire_model();
-            $dateCreation = new DateTime();
-            $dateTimeString = $dateCreation->format('Y-m-d H:i:s');
-            $result = $partenaire_model->ajouter_model($nom, $willya, $adresse, $categorie, $logo, $description, $dateTimeString);
-    
-            if ($result) {
-                $response['status'] = 'true';
-                $response['message'] = 'Partenaire ajouté avec succès.';
-            }
-        } catch (Exception $e) {
-            $response['message'] = $e->getMessage();
-        }
-        // header('Content-Type: application/json; charset=UTF-8');
-        // echo json_encode($response, JSON_UNESCAPED_UNICODE);
-        return $response;
+        $result = $partenaire_model->ajouter_model($nom, $willya, $adresse, $categorie, $logo, $description,  $dateTimeString);
+       
     }
+    
     
     
     public function affiche_parteners_page() {
@@ -206,6 +126,604 @@ class Partenaire_controller {
         $menu->display_footer();
         echo '</body>';
     }
+    public function affiche_partenaires_dashbord_page() {
+        // $userController = new User_controller();
+        // $userId = $userController->verify_cookie('admin'); 
+        // if ($userId !== null) {
+            $pageName = "ElMountada | Partenaires Dashboard";
+            $cssFiles = [
+                '../public/style/varaibles.css',
+                '../public/style/dashbord_table.css',
+                '../public/style/menu_left.css',
+                '../public/style/Footer.css'
+            ];
+            $jsFiles = ['../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+    
+            echo '<h1>Partenaires Dashboard</h1>';
+    
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('admin');
+    
+            $controller = new Dashboard_Componant_controller();
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
+                ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+                ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],
+                ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],
+                ['label' => 'Catégorie', 'attribute' => 'categorie', 'type' => 'text'],
+                ['label' => 'Date Ajoutée', 'attribute' => 'date_ajouter', 'type' => 'date'],
+            ];
+    
+            $actions = [
+                [
+                    'label' => 'Modifier',
+                    'url' => '../admin/modifier_partenaire/{id}',
+                    'class' => 'btn-edit'
+                ],
+                [
+                    'label' => 'Voir plus',
+                    'url' => '../admin/details_partenaire/{id}',
+                    'class' => 'btn-view'
+                ],
+                [
+                    'label' => 'Supprimer',
+                    'url' => '../admin/supprimePartenaire/{id}',
+                    'onclick' => "return confirm('Êtes-vous sûr de vouloir supprimer cette partenaire ?');"
+                    // 'class' => 'btn-delete',
+                    // 'id' => 'action_button',
+                    // 'onclick' => '',
+                    // 'data' => [
+                    //     'action' => 'supprimer',
+                    //     'nomclass' => 'Partenaire_controller',
+                    //     'functionname' => 'supprimer_partenaire_controller',
+                    //     'pathfile' => '/public/images/partenaires'
+                   
+                ],
+            ];
+    
+            $controller->affiche_Dashbord(
+                'Partenaire_controller',
+                'get_Partenaire_controller',
+                $fields,
+                [],
+                $actions,
+                'Partenaire_controller',
+                'supprimer_partenaires_controller'
+            );
+    
+            $footer = new Footer_controller();
+            $footer->display_footer();
+    
+            echo '</body>';
+        // }
+    }
+
+    public function affiche_partenaire_details_page($id) {
+        $pageName = "ElMountada | Détails Partenaire";
+        $cssFiles = [
+            '../../public/style/varaibles.css',
+            '../../public/style/dashbord_details.css',
+            '../../public/style/footer.css'
+        ];
+        $jsFiles = [];
+        $libraries = [];
+        $headController = new Head_controller();
+        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+    
+        $fields = [
+            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+            ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],
+            ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],
+            ['label' => 'Catégorie', 'attribute' => 'categorie', 'type' => 'text'],
+            ['label' => 'Date Ajoutée', 'attribute' => 'date_ajouter', 'type' => 'date'],
+        ];
+    
+        $controller = new Dashboard_Componant_controller();
+        $controller->display_DetailView(
+            'Partenaire_controller',
+            'get_Partenaire_by_id_controller',
+            $fields,
+            [$id],
+            'Détails du Partenaire'
+        );
+    
+        $footer = new Footer_controller();
+        $footer->display_footer();
+    
+        echo '</body>';
+    }
+
+    public function affiche_partenaire_modifier_page($id) {
+        $pageName = "ElMountada | Modifier Partenaire";
+        $cssFiles = [
+            '../../public/style/varaibles.css',
+            '../../public/style/dashbord_modifier.css',
+            '../../public/style/footer.css'
+        ];
+        $jsFiles = ['../../js/scrpt.js'];
+        $libraries = ['jquery', 'icons'];
+        $headController = new Head_controller();
+        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+    
+        $controller = new Dashboard_Componant_controller();
+    
+        $fields = [
+            ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
+            ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],  
+            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],  
+            ['label' => 'Willya', 'attribute' => 'willya', 'type' => 'text'],  
+            ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],  
+            ['label' => 'Catégorie', 'attribute' => 'categorie', 'type' => 'select', 
+                'options' => $controller->construire_Dashboard('Partenaire_categorie_controller', 'get_Partenaire_category_controller', [], []), 
+                'att_option_affiche' => 'categorie', 
+                'att_option_return' => 'categorie'],  
+            ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],  
+        ];
+    
+        $controller->display_ModifierForm(
+            'Partenaire_controller',
+            'get_Partenaire_by_id_controller',
+            $fields,
+            [$id],
+            '../../admin/modifier_partenaire_post',
+            'Partenaire_controller',
+            'modifier_partenaire_controller',
+            'public/images/partenaires',
+            '../../admin/dash_partenaires',
+            'Modifier Partenaire'
+        );
+
+    
+        echo '</body>';
+    }
+
+    public function affiche_partenaire_ajouter_page() {
+        $pageName = "ElMountada | Ajouter Partenaire";
+        $cssFiles = [
+            '../public/style/varaibles.css',
+            '../public/style/dashbord_ajouter.css',
+            '../public/style/menu_left.css',
+            '../public/style/Footer.css'
+        ];
+        $jsFiles = ['../js/scrpt.js'];
+        $libraries = ['jquery', 'icons'];
+    
+        $headController = new Head_controller();
+        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+    
+        $menu = new menu_composant_controller();
+        $menu->display_menu_by_role('admin');
+    
+        $controller = new Dashboard_Componant_controller();
+    
+        $fields = [
+            ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],
+            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+            ['label' => 'Willaya', 'attribute' => 'willya', 'type' => 'text'],
+            ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],
+            [
+                'label' => 'Categorie', 
+                'attribute' => 'categorie', 
+                'type' => 'select',
+                'options' => $controller->construire_Dashboard('Partenaire_categorie_controller', 'get_Partenaire_category_controller', [], []), 
+                'att_option_affiche' => 'categorie', 
+                'att_option_return' => 'categorie'
+            ],
+            ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
+        ];
+    
+        $controller->display_AjouterForm(
+            $fields,
+            '../admin/ajouter_partenaire_post',
+            'Partenaire_controller',
+            'ajouter_partenaire_controller',
+            'public/images/partenaires',
+            '../admin/dash_partenaires',
+            'Ajouter Partenaire'
+        );
+    
+    
+        echo '</body>';
+    }
+    public function ajouter_partenaire() {
+        session_start();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Retrieve form data
+            $nom = $_POST['nom'] ?? null;
+            $willya = $_POST['willya'] ?? null;
+            $adresse = $_POST['adresse'] ?? null;
+            $categorie = $_POST['categorie'] ?? 1;
+            $description = $_POST['description'] ?? null;
+    
+            // Handle file upload for the logo
+            $logoFile = $_FILES['logo'] ?? null;
+            $logoPath = null;
+            echo "<h3>Informations du formulaire :</h3>";
+            echo "Nom : " . htmlspecialchars($nom) . "<br>";
+            echo "Willya : " . htmlspecialchars($willya) . "<br>";
+            echo "Adresse : " . htmlspecialchars($adresse) . "<br>";
+            echo "Catégorie : " . htmlspecialchars($categorie) . "<br>";
+            echo "Description : " . htmlspecialchars($description) . "<br>";
+            
+            // Afficher les informations du fichier logo
+            echo "<h3>Informations du fichier logo :</h3>";
+            if ($logoFile) {
+                echo "<pre>";
+                print_r($logoFile);
+                echo "</pre>";
+            } else {
+                echo "Aucun fichier logo n'a été téléchargé.<br>";
+            }
+            $uploadDir = 'public/image/partenaires/';
+            try {
+                if (isset($logoFile) && $logoFile['error'] === UPLOAD_ERR_OK) {
+                    $logoPath = file_controller::chargerFile($logoFile, $uploadDir);
+                    $logoPath = $uploadDir . $logoPath;
+                }
+            } catch (Exception $e) {
+                $_SESSION['errorsAjout'] = ["Erreur lors du téléchargement du logo : " . $e->getMessage()];
+                // header('Location: ../admin/ajoute_partanaire');
+                exit();
+            }
+    
+            if ($nom && $willya && $adresse && $categorie && $description) {
+                $this->ajouter_partenaire_controller($nom, $willya, $adresse, $categorie, $description, $logoPath);
+                // header('Location: ../admin/dash_partenaires');
+                exit();
+            } else {
+                $_SESSION['errorsAjout'] = ["Tous les champs sont obligatoires."];
+                //  header('Location: ../admin/ajoute_partanaire');
+                exit();
+            }
+        } else {
+            $_SESSION['errorsAjout'] = ["Requête invalide."];
+            // header('Location: ../admin/ajoute_partanaire');
+            exit();
+        }
+    }
+    public function modifier_partenaire() {
+        session_start();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? null;
+            $nom = $_POST['nom'] ?? null;
+            $willya = $_POST['willya'] ?? null;
+            $adresse = $_POST['adresse'] ?? null;
+            $categorie = $_POST['categorie'] ?? null; 
+            $description = $_POST['description'] ?? null;
+    
+            $logoFile = $_FILES['image'] ?? null;
+            $logoPath = null;
+    
+            $uploadDir = 'public/image/partenaires/';
+            try {
+                if (isset($logoFile) && $logoFile['error'] === UPLOAD_ERR_OK) {
+                    $logoPath = file_controller::chargerFile($logoFile, $uploadDir);
+                    $logoPath = $uploadDir . $logoPath;
+                } else {
+                    $existingPartenaire = $this->get_Partenaire_by_id_controller($id);
+                    if ($existingPartenaire) {
+                        $logoPath = $existingPartenaire['logo']; 
+                    }
+                }
+            } catch (Exception $e) {
+                $_SESSION['errorsModifier'] = ["Erreur lors du téléchargement du logo : " . $e->getMessage()];
+                header('Location: ./modifier_partenaire/' . $id);
+                exit();
+            }
+            if ($id && $nom && $willya && $adresse && $categorie && $description) {
+                $this->modifier_partenaire_controller($id, $nom, $willya, $adresse, $categorie, $description, $logoPath);
+                header('Location: ../admin/dash_partenaires');
+            } else {
+                $_SESSION['errorsModifier'] = ["Tous les champs sont obligatoires."];
+                header('Location: ./modifier_partenaire/' . $id);
+                exit();
+            }
+        } else {
+            $_SESSION['errorsModifier'] = ["Requête invalide."];
+            header('Location: ./modifier_partenaire/' . $id);
+            exit();
+        }
+    }
+    public function supprimer_partenaire($id) {
+        session_start();
+        if ($id) {
+            try {
+                $partenaire = $this->get_Partenaire_by_id_controller($id);
+                if (!$partenaire) {
+                    throw new Exception("Partenaire introuvable.");
+                }
+    
+                $logoPath = $partenaire['logo'] ?? null;
+                if ($logoPath && file_exists($logoPath)) {
+                    if (!unlink($logoPath)) {
+                        throw new Exception("Erreur lors de la suppression du logo.");
+                    }
+                }
+    
+                $result = $this->supprimer_partenaire_controller($id);
+                if ($result) {
+                    $_SESSION['successDelite'] = "Le partenaire a été supprimé avec succès.";
+                } else {
+                    $_SESSION['errorsDelite'] = ["Erreur lors de la suppression du partenaire."];
+                }
+    
+                header('Location: ../dash_partenaires');
+                exit();
+    
+            } catch (Exception $e) {
+                $_SESSION['errorsDelite'] = [$e->getMessage()];
+                header('Location: ../dash_partenaires');
+                exit();
+            }
+        } else {
+            $_SESSION['errorsDelite'] = ["L'ID du partenaire est manquant."];
+            header('Location: ../dash_partenaires');
+            exit();
+        }
+    }
+
+
+    public function affiche_partenaire_compte_page() {
+        // Configuration de la page
+        $pageName = "ElMountada | Partenaires et Comptes";
+        $cssFiles = [
+            '../public/style/varaibles.css',
+            '../public/style/dashbord_table.css',
+            '../public/style/menu_left.css',
+            '../public/style/Footer.css'
+        ];
+        $jsFiles = ['../js/scrpt.js'];
+        $libraries = ['jquery', 'icons'];
+        $headController = new Head_controller();
+        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+    
+        // Afficher le menu
+        $menu = new menu_composant_controller();
+        $menu->display_menu_by_role('admin');
+    
+        // Récupérer les partenaires avec leurs comptes
+        $partenaires = $this->get_Partenaire_With_Compte_controller();
+    
+        // Afficher le tableau des partenaires
+        echo '<h1>Comptes desPartenaires</h1>';
+    
+        $controller = new Dashboard_Componant_controller();
+        $fields = [
+            ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
+            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+            ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
+        ];
+    
+        $actions = [
+            [
+                'label' => 'Modifier',
+                'url' => '../admin/modifier_partenaire_compte/{id}',
+                'class' => 'btn-edit'
+            ],
+            [
+                'label' => 'Supprimer',
+                'url' => '../admin/supprimer_partenaire_compte/{id}',
+                'onclick' => "return confirm('Êtes-vous sûr de vouloir supprimer ce partenaire ?');"
+            ],
+        ];
+    
+        $controller->affiche_Dashbord(
+            'Partenaire_controller',
+            'get_Partenaire_With_Compte_controller',
+            $fields,
+            [],
+            $actions,
+            'Partenaire_controller',
+            'supprimer_partenaire_compte_controller'
+        );
+    
+       
+    
+        echo '</body>';
+    }
+    public function get_Partenaire_With_Compte_controller() {
+        $model = new Partenaire_model();
+        $partenaires = $model->getAllPartenairesWithCompte();
+        return $partenaires;
+    }
+
+    public function affiche_partenaire_compte_ajouter_page() {
+        $pageName = "ElMountada | Ajouter Partenaire Compte";
+        $cssFiles = [
+            '../public/style/varaibles.css',
+            '../public/style/dashbord_ajouter.css',
+            '../public/style/menu_left.css',
+            '../public/style/Footer.css'
+        ];
+        $jsFiles = ['../js/scrpt.js'];
+        $libraries = ['jquery', 'icons'];
+    
+        $headController = new Head_controller();
+        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+    
+        $menu = new menu_composant_controller();
+        $menu->display_menu_by_role('admin');
+    
+        $controller = new Dashboard_Componant_controller();
+    
+        $fields = [
+            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'select', 
+                'options' => $controller->construire_Dashboard('Partenaire_controller', 'get_Partenaire_controller', [], []), 
+                'att_option_affiche' => 'nom', 
+                'att_option_return' => 'id'
+            ],
+            ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
+            ['label' => 'Mot de passe', 'attribute' => 'password', 'type' => 'password'],
+        ];
+    
+        $controller->display_AjouterForm(
+            $fields,
+            '../admin/ajouter_partenaire_compte_post_admin',
+            'Partenaire_controller',
+            'ajouter_partenaire_compte_controller',
+            'public/images/partenaires',
+            '../admin/partenaire_ajouter_compte',
+            'Ajouter Partenaire et Compte'
+        );
+    
+        echo '</body>';
+    }
+    public function ajouterPartenaireCompte_controller($nom, $email, $password) {
+        $controller = new Partenaire_model();
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);  
+        $controller->ajouterPartenaireCompte($nom, $email, $hashedPassword);
+    }
+    public function ajouter_partenaire_compte() {
+        session_start();
+        echo 'i am here';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nom = $_POST['nom'] ?? null;
+            $email = $_POST['email'] ?? null;
+            $password = $_POST['password'] ?? null;
+            echo $nom,$email,$password;
+            if ($nom && $email && $password) {
+    
+                $idCompte = $this->ajouterPartenaireCompte_controller($nom,$email, $password);
+                echo $idCompte;
+                header('Location: ../admin/partenaire_contact');
+                    exit();
+            } else {
+                $_SESSION['errorsAjout'] = ["Tous les champs sont obligatoires."];
+                header('Location: ../admin/partenaire_ajouter_compte');
+                exit();
+            }
+        } else {
+            $_SESSION['errorsAjout'] = ["Requête invalide."];
+            header('Location: ../admin/partenaire_ajouter_compte');
+            exit();
+        }
+    }
+
+
+    public function affiche_partenaire_compte_modifier_page($id) {
+        $pageName = "ElMountada | Modifier Partenaire Compte";
+        $cssFiles = [
+            '../../public/style/varaibles.css',
+            '../../public/style/dashbord_modifier.css',
+            '../../public/style/menu_left.css',
+            '../../public/style/Footer.css'
+        ];
+        $jsFiles = ['../js/scrpt.js'];
+        $libraries = ['jquery', 'icons'];
+    
+        $headController = new Head_controller();
+        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+    
+        $menu = new menu_composant_controller();
+        $menu->display_menu_by_role('admin');
+    
+        $controller = new Dashboard_Componant_controller();
+    
+        $fields = [
+            ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
+            ['label' => 'Email', 'attribute' => 'email', 'type' => 'text', ],
+            ['label' => 'Nouveau mot de passe', 'attribute' => 'password', 'type' => 'password'],
+        ];
+    
+        // Affichage du formulaire de modification
+        $controller->display_ModifierForm(
+            'User_controller',
+            'get_user_by_id_controller',
+            $fields,
+            [$id],
+            '../../admin/modifier_partenaire_compte_post',
+            'Partenaire_controller',
+            'modifier_partenaire_compte_controller',
+            'public/images/partenaires',
+            '../admin/partenaires_comptes',
+            'Modifier Partenaire Compte'
+        );
+    //modifier_compte_parte_post
+        echo '</body>';
+    }
+
+    public function modifier_compte_parte_post() {
+        session_start();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? null;
+            $email = $_POST['email'] ?? null;
+            $password = $_POST['password'] ?? null;
+    
+            // Vérification des champs obligatoires
+            if ($email) {
+                $controller = new User_controller();
+                $result=$controller->modifier_controller($id, $email,'partenaire' , $password);
+    
+                if ($result) {
+                    header('Location: ../admin/partenaire_contact');
+                    exit();
+                } else {
+                    // En cas d'erreur
+                    $_SESSION['errorsModifier'] = ["Erreur lors de la modification du partenaire."];
+                    header('Location: ../admin/modifier_partenaire_compte/' . $id);
+                    exit();
+                }
+            } else {
+                // Si des champs sont manquants
+                $_SESSION['errorsModifier'] = ["le champs mail est obligatoires."];
+                header('Location: ../admin/modifier_partenaire_compte/' . $id);
+                exit();
+            }
+        } else {
+            $_SESSION['errorsModifier'] = ["Requête invalide."];
+            header('Location: ../admin/modifier_partenaire_compte/' . $id);
+            exit();
+        }
+    }
+
+    public function supprimer_part_compt_post($id) {
+        session_start();
+        if ($id) {
+            try {
+                $userController = new User_controller();
+                $result = $userController->supprimer_user_controller($id);
+                if ($result) {
+                    $_SESSION['successUserDelete'] = "Le compte utilisateur a été supprimé avec succès.";
+                } else {
+                    $_SESSION['errorsUserDelete'] = ["Erreur lors de la suppression du compte utilisateur."];
+                }
+    
+                header('Location: ../../admin/partenaire_contact');
+                exit();
+            } catch (Exception $e) {
+                $_SESSION['errorsUserDelete'] = [$e->getMessage()];
+                header('Location: ../admin/partenaire_contact');
+                exit();
+            }
+        } else {
+            $_SESSION['errorsUserDelete'] = ["L'ID de l'utilisateur est manquant."];
+            header('Location: ../admin/partenaire_contact');
+            exit();
+        }
+    }
+
+    public function affiche_verifier_id_form() {
+        $pageName = "ElMountada | Vérifier Demande";
+        $cssFiles = ['./public/style/variables.css', './public/style/menu_user.css', './public/style/footer.css'];
+        $jsFiles = ["js/script.js"];
+        $libraries = ['jquery', 'icons'];
+    
+        $headController = new Head_controller();
+        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        $this->affiche_verifier_id_form_controller();
+        $footer = new Footer_controller();
+        $footer->display_footer();
+        echo '</body>';
+    }
+
+    public function affiche_verifier_id_form_controller(){
+        $controller = new Partenier_view();
+        $controller->affiche_verifier_id_form();
+    }
+    
     
 }
 ?>

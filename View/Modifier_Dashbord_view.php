@@ -5,12 +5,13 @@ class Modifier_Dashbord_view {
     public function display_ModifierForm($data, $fields, $action, $nomClass, $functionName,$pathFile, $rederection, $titrePage) {
         
         if (!empty($data)) {
+            // var_dump($data);
             echo '<div class="modifier-section">';
             echo '<h2>'.$titrePage.'</h2>';
-
+            session_start();
             if (isset($_SESSION['errorsModifier']) && !empty($_SESSION['errorsModifier'])) {
                 echo '<div style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
-                foreach ($_SESSION['errors'] as $error) {
+                foreach ($_SESSION['errorsModifier'] as $error) {
                     echo '<p style="margin: 0; font-size: 14px; font-family: Arial, sans-serif;">&#9888; ' . htmlspecialchars($error) . '</p>';
                 }
                 echo '</div>';
@@ -60,18 +61,18 @@ class Modifier_Dashbord_view {
 
                     case 'textarea':
                         echo '<label for="' . htmlspecialchars($field['attribute'] ?? '') . '">' . htmlspecialchars($field['label'] ?? '') . ':</label>';
-                        echo '<textarea name="' . htmlspecialchars($field['attribute'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" rows="4" required>' . htmlspecialchars($data[0][$field['attribute']] ?? '') . '</textarea>';
+                        echo '<textarea name="' . htmlspecialchars($field['attribute'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" rows="4" >' . htmlspecialchars($data[0][$field['attribute']] ?? '') . '</textarea>';
                         break;
 
                     case 'date':
                     case 'datetime-local':
                         echo '<label for="' . htmlspecialchars($field['attribute'] ?? '') . '">' . htmlspecialchars($field['label'] ?? '') . ':</label>';
-                        echo '<input type="' . htmlspecialchars($field['type'] ?? '') . '" name="' . htmlspecialchars($field['attribute'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" value="' . htmlspecialchars($data[0][$field['attribute']] ?? '') . '" required>';
+                        echo '<input type="' . htmlspecialchars($field['type'] ?? '') . '" name="' . htmlspecialchars($field['attribute'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" value="' . htmlspecialchars($data[0][$field['attribute']] ?? '') . '" >';
                         break;
 
                     case 'select':
                         echo '<label for="' . htmlspecialchars($field['attribute'] ?? '') . '">' . htmlspecialchars($field['label'] ?? '') . ':</label>';
-                        echo '<select name="' . htmlspecialchars($field['attribute'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" required>';
+                        echo '<select name="' . htmlspecialchars($field['attribute'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" >';
                         
                         if (isset($field['options'])) {
                             $optionDisplay = $field['att_option_affiche'] ?? null;
@@ -90,9 +91,14 @@ class Modifier_Dashbord_view {
                         }
                     break;
 
+                    case 'password':
+                        echo '<label for="' . htmlspecialchars($field['attribute'] ?? '') . '">' . htmlspecialchars($field['label'] ?? '') . ':</label>';
+                        echo '<input type="' . htmlspecialchars($field['type'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" name="' . htmlspecialchars($field['attribute'] ?? '') . '" >';
+                     break;
+
                     default:
                         echo '<label for="' . htmlspecialchars($field['attribute'] ?? '') . '">' . htmlspecialchars($field['label'] ?? '') . ':</label>';
-                        echo '<input type="' . htmlspecialchars($field['type'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" name="' . htmlspecialchars($field['attribute'] ?? '') . '" value="' . htmlspecialchars($data[0][$field['attribute']] ?? '') . '" required>';
+                        echo '<input type="' . htmlspecialchars($field['type'] ?? '') . '" id="' . htmlspecialchars($field['attribute'] ?? '') . '" name="' . htmlspecialchars($field['attribute'] ?? '') . '" value="' . htmlspecialchars($data[0][$field['attribute']] ?? '') . '" >';
                         break;
                 }
                 

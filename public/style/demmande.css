@@ -1,0 +1,92 @@
+
+
+/* Conteneur du formulaire */
+.form-container {
+    background-color: var(--cadre-color);
+    padding: 30px;
+    border-radius: 8px;
+    width: 60%;
+    margin: 30px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Titres et sous-titres */
+.form-container h2 {
+    color: var(--title-color);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+/* Message d'erreur */
+.error-messages {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.error-message {
+    margin: 0;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+/* Formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Label pour les champs */
+form label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--title-color);
+}
+
+/* Champ de sélection pour le type de carte */
+select, input[type="file"] {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--primary-color);
+    background-color: var(--white-color);
+    color: var(--title-color);
+}
+
+/* Bouton de soumission */
+button {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Effet au survol du bouton */
+button:hover {
+    background-color: var(--primary-color);
+}
+
+/* Champ d'erreur de formulaire */
+input[type="file"]:invalid {
+    border-color: var(--rouge-color);
+}
+
+select:invalid {
+    border-color: var(--rouge-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .form-container {
+        width: 90%;
+        padding: 20px;
+    }
+}

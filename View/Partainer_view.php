@@ -132,6 +132,25 @@ class Partenier_view{
             echo '<p class="error-message">Erreur : ' . htmlspecialchars($e->getMessage()) . '</p>';
         }
     }        
+    public function affiche_verifier_id_form() {
+        session_start();
+        
+        if (isset($_SESSION['errors'])) {
+            echo '<div style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
+            foreach ($_SESSION['errors'] as $error) {
+                echo '<p style="margin: 0; font-size: 14px; font-family: Arial, sans-serif;">&#9888; ' . $error . '</p>';
+            }
+            echo '</div>';
+            unset($_SESSION['errors']);
+        }
+    
+        echo '<h1>Vérifier une Demande</h1>';
+        echo '<form method="POST" action="./partenaire/verifier/{id}">';  // Action qui sera utilisée pour soumettre le formulaire
+        echo '<label for="id">ID de Membre :</label>';
+        echo '<input type="text" id="id" name="id" required placeholder="Entrez l\'ID de la Membre">';
+        echo '<button type="submit">Vérifier</button>';
+        echo '</form>';
+    }
     
     
 }

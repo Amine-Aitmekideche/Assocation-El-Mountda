@@ -45,6 +45,46 @@ class Offers_view {
         }
     }
 
+
+    public function display_offers_table_carte($carte) {
+        $offersController = new Offers_controller();
+    
+        $remises = $offersController->get_Offres_by_carte_controller($carte);
+    
+
+            if (!empty($remises)) {
+                echo '<table class="offres-table">';
+                echo '<thead>';
+                echo '<tr>';
+                echo '<th>Ville</th>';
+                echo '<th>Nom</th>';
+                echo '<th>Catégorie</th>';
+                echo '<th>Réduction</th>';
+                echo '<th>Avantage</th>';
+                echo '<th>Date Fin</th>';
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                
+                foreach ($remises as $remise) {
+                    echo '<tr>';
+                    echo '<td>' . htmlspecialchars($remise['willya']) . '</td>';
+                    echo '<td>' . htmlspecialchars($remise['nom']) . '</td>';
+                    echo '<td>' . htmlspecialchars($remise['categorie']) . '</td>';
+                    echo '<td>' . htmlspecialchars($remise['reduction']) . '%</td>';
+                    echo '<td>' . htmlspecialchars($remise['avantage']) . '</td>';
+                    echo '<td>' . (!empty($remise['date_fin']) ? htmlspecialchars($remise['date_fin']) : 'Illimité') . '</td>';
+                    echo '</tr>';
+                }
+            
+            echo '</tbody>';
+            echo '</table>';
+        } else {
+            echo '<p>Aucune offre disponible pour cette carte.</p>';
+        }
+    }
+    
+
     public function display_all_offers_table($limite) {
         $offersController = new Offers_controller();
         $partenaireController = new Partenaire_controller();

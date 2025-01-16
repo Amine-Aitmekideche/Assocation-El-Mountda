@@ -1,0 +1,63 @@
+je suis dans ajouter partenaire controllerDonnées POST : Array
+(
+    [nom] => dd
+    [willya] => dd
+    [adresse] => dd
+    [categorie] => Hotel
+    [description] => dd
+)
+Données FILES : Array
+(
+    [logo] => Array
+        (
+            [name] => premium_photo-1689568126014-06fea9d5d341.jpeg
+            [full_path] => premium_photo-1689568126014-06fea9d5d341.jpeg
+            [type] => image/jpeg
+            [tmp_name] => /Applications/MAMP/tmp/php/phpaTYHdl
+            [error] => 0
+            [size] => 382970
+        )
+
+)
+je suis dans ajouter partenaire controllerDonnées POST : Array
+(
+    [nom] => dd
+    [willya] => dd
+    [adresse] => dd
+    [categorie] => Hotel
+    [description] => dd
+)
+Données FILES : Array
+(
+    [logo] => Array
+        (
+            [name] => premium_photo-1689568126014-06fea9d5d341.jpeg
+            [full_path] => premium_photo-1689568126014-06fea9d5d341.jpeg
+            [type] => image/jpeg
+            [tmp_name] => /Applications/MAMP/tmp/php/phpf2EOqv
+            [error] => 0
+            [size] => 382970
+        )
+
+)
+je suis dans ajouter partenaire controllerDonnées POST : Array
+(
+    [nom] => xc
+    [willya] => dd
+    [adresse] => dd
+    [categorie] => Hotel
+    [description] => dd
+)
+Données FILES : Array
+(
+    [logo] => Array
+        (
+            [name] => premium_photo-1689568126014-06fea9d5d341.jpeg
+            [full_path] => premium_photo-1689568126014-06fea9d5d341.jpeg
+            [type] => image/jpeg
+            [tmp_name] => /Applications/MAMP/tmp/php/phpRzJR9R
+            [error] => 0
+            [size] => 382970
+        )
+
+)

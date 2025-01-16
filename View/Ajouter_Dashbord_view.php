@@ -5,7 +5,6 @@ class Ajouter_Dashbord_view {
         echo '<h2>'.$titrePage.'</h2>';
         echo '<form action="' . htmlspecialchars($action) . '" method="POST" enctype="multipart/form-data">';
         session_start();
-        // Vérification si des erreurs sont présentes dans la session et affichage
         if (isset($_SESSION['errorsAjout']) && !empty($_SESSION['errorsAjout'])) {
             echo '<div style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
             foreach ($_SESSION['errorsAjout'] as $error) {
@@ -13,11 +12,9 @@ class Ajouter_Dashbord_view {
             }
             echo '</div>';
             
-            // Une fois les erreurs affichées, les retirer de la session pour éviter les répétitions
             unset($_SESSION['errorsAjout']);
         }
     
-        // Boucle pour générer les champs du formulaire
         foreach ($fields as $field) {
             echo '<div class="form-group">';
             echo '<label for="' . htmlspecialchars($field['attribute'] ?? '') . '">' . htmlspecialchars($field['label'] ?? '') . ':</label>';

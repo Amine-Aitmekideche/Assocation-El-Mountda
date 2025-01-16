@@ -5,7 +5,18 @@ require_once __DIR__ . '/../Controller/lien_controller.php';
 class Dashboard_Componant_view{
     public function display_Dashbord($data, $fields, $actions,$classSuppName , $functionSuppName) {
         if (count($data) > 0) {
+            // var_dump($data);
             echo '<div class="dashboard-section">';
+            session_start();
+            if (isset($_SESSION['errorsDelite']) && !empty($_SESSION['errorsDelite'])) {
+                echo '<div style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
+                foreach ($_SESSION['errorsDelite'] as $error) {
+                    echo '<p style="margin: 0; font-size: 14px; font-family: Arial, sans-serif;">&#9888; ' . $error . '</p>';
+                }
+                echo '</div>';
+                
+                unset($_SESSION['errorsDelite']);
+            }
             echo '<div class="dashboard">';
             echo '<table>';
             echo '<thead>';
@@ -45,8 +56,7 @@ class Dashboard_Componant_view{
                             break;
     
                         default:
-                            // Affichage d'un texte simple
-                            $textValue = $row[$field['attribute']] ?? '';
+                            $textValue = $row[$field['attribute']] ?? '/';
                             echo '<td>' . htmlspecialchars($textValue) . '</td>';
                             break;
                     }
@@ -54,35 +64,37 @@ class Dashboard_Componant_view{
                 
             echo '<td>';
             foreach ($actions as $action) {
-                if ($action['url'] === '#') {
-                    $data = $action['data']; 
+                if ($action['url'] === '#') { 
+                    $data = $action['data'] ?? [];
                     $dataAttributes = '';
                     
                     foreach ($data as $key => $value) {
                         $dataAttributes .= ' data-' . htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
                     }
-            
-                    $class = htmlspecialchars($action['class']);
-                    $id = htmlspecialchars($action['id']);
-                    $onclick = htmlspecialchars($action['onclick']);
-                    $label = htmlspecialchars($action['label']);
-
-            
+                    
+                    $class = htmlspecialchars($action['class'] ?? '');
+                    $id = htmlspecialchars($action['id'] ?? '');
+                    $onclick = htmlspecialchars($action['onclick'] ?? '');
+                    $label = htmlspecialchars($action['label'] ?? '');
+                    
                     echo "<button class='{$class}' id='{$id}' onclick=\"{$onclick}\" {$dataAttributes} data-id=\"" . htmlspecialchars($row['id']) . "\">";
                     echo $label;
                     echo '</button>';
                 } else {
-                    $url = str_replace('{id}', $row['id'], $action['url']);
-                    $url = base_url($url); 
-                    $label = htmlspecialchars($action['label']);
+                    // Actions avec URL dynamique
+                    $url = str_replace('{id}', $row['id'], $action['url']); // Remplacement dynamique
+                    $url = htmlspecialchars($url); // Sécuriser l'URL
+                    $label = htmlspecialchars($action['label'] ?? '');
                     $class = htmlspecialchars($action['class'] ?? '');
                     $onclick = htmlspecialchars($action['onclick'] ?? '');
-            
+                    
+                    // Bouton avec lien intégré
                     echo "<button class='{$class}' onclick=\"{$onclick}\">";
-                    echo "<a href=\"{$url}\">{$label}</a>";
+                    echo "<a href=\"{$url}\" style=\"color: inherit; text-decoration: none;\">{$label}</a>";
                     echo '</button>';
                 }
             }
+            
             
             
             

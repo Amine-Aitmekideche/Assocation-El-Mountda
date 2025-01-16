@@ -26,7 +26,18 @@ class Detail_Dashbord_view {
                     } else {
                         echo '<p>Aucun fichier disponible.</p>';
                     }
-                } else {
+                } elseif($type === 'cle'){
+                    $className = $field['class'];
+                            $methodName = $field['methode'];
+                            $argValue = $value?? null;
+                            if (!empty($className) && !empty($methodName)) {
+                                $controller = new $className(); 
+                                $result = $controller->$methodName($argValue); 
+                                $displayValue = $result[0][$field['att_option_affiche']];
+                                echo '<td>' . htmlspecialchars($displayValue) . '</td>';
+                            } 
+
+                }else {
                     echo '<p>' . htmlspecialchars_decode($value) . '</p>';
                 }
                 

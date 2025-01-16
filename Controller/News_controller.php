@@ -25,26 +25,7 @@
             $r=$mtf->get_News_by_id_model($id);
             return $r;
         }
-        // public function modifier_news_controller($id, $titre, $description, $type, $date_debut, $date_fin, $image=null) {
-        //     // if ($image === null) {
-        //     //     $image = '';
-        //     // }
-        //     $news_model = new News_model();
-        //     $result = $news_model->modifier_model($id, $titre, $description, $type, $date_debut, $date_fin, $image);
-        //     if ($result) {
-        //         return [
-        //             'status' => 'true',
-        //             'message' => 'Modification  News réussi !',
-        //         ];
-        //     } else {
-        //         return [
-        //             'status' => 'false',
-        //             'message' => 'Erreur lors de la modification de  news.',
-        //         ];
-        //     }
-            
-        // }
-
+       
         public function modifier_news_controller($id, $titre, $description, $type, $date_debut, $date_fin, $image) {
             $news_model = new News_model();
             $news_model->modifier_news_model($id, $titre, $description, $type, $date_debut, $date_fin, $image);
@@ -142,26 +123,27 @@
                 $actions = [
                     [
                         'label' => 'Modifier',
-                        'url' => '/admin/modifier_news/{id}', 
+                        'url' => '../admin/modifier_news/{id}', 
                         'class' => 'btn-edit'
                     ],
                     [
                         'label' => 'Voir plus',
-                        'url' => '/admin/details_news/{id}', 
+                        'url' => '../admin/details_news/{id}', 
                         'class' => 'btn-view'
                     ],
                     [
                         'label' => 'Supprimer',
-                        'url' => '#', 
-                        'class' => 'btn-delete',
-                        'id' => 'action_button',
-                        'onclick' => '', 
-                        'data' => [ 
-                            'action' => 'supprimer',
-                            'nomclass' => 'News_controller',
-                            'functionname' => 'supprimer_news_controller',
-                            'pathfile' => '/public/images/news'
-                        ],
+                        'url' => '../admin/supprimeNews/{id}',
+                        'onclick' => "return confirm('Êtes-vous sûr de vouloir supprimer cette news ?');"
+                        // 'class' => 'btn-delete',
+                        // 'id' => 'action_button',
+                        // 'onclick' => '', 
+                        // 'data' => [ 
+                        //     'action' => 'supprimer',
+                        //     'nomclass' => 'News_controller',
+                        //     'functionname' => 'supprimer_news_controller',
+                        //     'pathfile' => '/public/images/news'
+                        // ],
                     ],
                 ];
         
@@ -203,7 +185,7 @@
                     ['label' => 'Titre', 'attribute' => 'titre', 'type' => 'text'],   
                     ['label' => 'Image', 'attribute' => 'image', 'type' => 'image'],    
                     ['label' => 'Description', 'attribute' => 'description', 'type' => 'text'],  
-                    ['label' => 'Type', 'attribute' => 'type', 'type' => 'select'],  
+                    ['label' => 'Type', 'attribute' => 'type', 'type' => 'cle', 'class'=> 'News_type_controller', 'methode' =>  'get_News_type_controller', 'att_option_affiche' => 'type', 'att_option_arg' => 'id'],
                     ['label' => 'Date Début', 'attribute' => 'date_debut', 'type' => 'text'],  
                     ['label' => 'Date Fin', 'attribute' => 'date_fin', 'type' => 'text'],  
                     ['label' => 'Date Publication', 'attribute' => 'date_publication', 'type' => 'text'],  
@@ -384,8 +366,8 @@
                     }
                 } catch (Exception $e) {
                     $_SESSION['errorsAjout'] = ["Erreur lors du téléchargement de l'image : " . $e->getMessage()];
-                    // header('Location: ./ajoute_news');
-                    // exit();
+                     header('Location: ./ajoute_news');
+                    exit();
                 }
         
                 if ($titre && $description && $type && $date_debut && $date_fin) {
@@ -403,6 +385,47 @@
                 exit();
             }
         }
+
+        public function supprimer_news($id) {
+            session_start();
+            if ($id) {
+                try {
+                    $news = $this->get_News_by_id_controller($id); 
+                    if (!$news) {
+                        throw new Exception("News introuvable.");
+                    }
+    
+                    $imagePath = $news['image'] ?? null;
+                    if ($imagePath && file_exists($imagePath)) {
+                        if (!unlink($imagePath)) {
+                            throw new Exception("Erreur lors de la suppression de l'image.");
+                        }
+                    }
+    
+                    $result = $this->supprimer_news_controller($id); 
+                    if ($result) {
+                        $_SESSION['successNewsDelite'] = "La news a été supprimée avec succès.";
+                    } else {
+                        $_SESSION['errorsNewsDelite'] = ["Erreur lors de la suppression de la news."];
+                    }
+    
+                    header('Location: ../dash_news');
+                    exit();
+    
+                } catch (Exception $e) {
+                    $_SESSION['errorsNewsDelite'] = [$e->getMessage()];
+                    header('Location: ../dash_news');
+                    exit();
+                }
+            } else {
+                $_SESSION['errorsNewsDelite'] = ["L'ID de la news est manquant."];
+                header('Location: ../dash_news');
+                exit();
+            }
+        }   
+
+
+    
         
     }
 ?>

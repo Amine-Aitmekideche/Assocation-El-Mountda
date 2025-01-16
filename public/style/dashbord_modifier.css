@@ -69,7 +69,7 @@ body {
 
 .form-actions button {
     background-color: var(--rouge-color);
-    color: var(--primary-color);
+    color: var(--white-color);
     padding: 10px 20px;
     font-size: 16px;
     border: none;
@@ -112,7 +112,7 @@ body {
 }
 
 .upload-button:hover {
-    background-color: var(--hover-color);
+    background-color: var(--primary-color);
 }
 
 .upload-button:active {
