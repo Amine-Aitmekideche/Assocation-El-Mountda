@@ -5,6 +5,7 @@ require_once __DIR__ . '/../Controller/file_controller.php';
 require_once 'menu_composant_controller.php';
 require_once 'Footer_controller.php';
 require_once 'Head_controller.php';
+require_once 'User_controller.php';
 class Offers_controller {
 
     public function get_Offres_controller() {
@@ -39,10 +40,6 @@ class Offers_controller {
     }
 
     public function display_offers_page() {
-        
-        
-
-
         $pageName = "ElMountada | Offers Avantages";
          $cssFiles = ['./public/style/varaibles.css', './public/style/menu_user.css','./public/style/offer.css','./public/style/composant.css', './public/style/footer.css'];
          $jsFiles = [];
@@ -62,9 +59,9 @@ class Offers_controller {
     }
 
     public function affiche_offres_dashbord_page() {
-        // $userController = new User_controller();
-        // $userId = $userController->verify_cookie('admin'); 
-        // if ($userId !== null) {
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
             $pageName = "ElMountada | Offres Dashboard";
             $cssFiles = [
                 '../public/style/varaibles.css',
@@ -124,93 +121,101 @@ class Offers_controller {
             $footer->display_footer();
     
             echo '</body>';
-        // }
+         }
     }
     public function affiche_offre_details_page($id) {
-        $pageName = "ElMountada | Détails Offre";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_details.css',
-            '../../public/style/footer.css'
-        ];
-        $jsFiles = [];
-        $libraries = [];
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $fields = [
-            ['label' => 'Partenaire', 'attribute' => 'partainer', 'type' => 'cle', 'class'=> 'Partenaire_controller', 'methode' =>  'get_Partenaire_by_id_controller', 'att_option_affiche' => 'nom', 'att_option_arg' => 'partainer'],
-            ['label' => 'Carte', 'attribute' => 'carte', 'type' => 'text'],
-            ['label' => 'Réduction', 'attribute' => 'reduction', 'type' => 'text'],
-            ['label' => 'Date de fin', 'attribute' => 'date_fin', 'type' => 'date'],
-            ['label' => 'Avantage', 'attribute' => 'avantage', 'type' => 'text'],
-        ];
-    
-        $controller = new Dashboard_Componant_controller();
-        $controller->display_DetailView(
-            'Offers_controller',
-            'get_Offre_by_id_controller',
-            $fields,
-            [$id],
-            'Détails de l\'Offre'
-        );
-    
-        $footer = new Footer_controller();
-        $footer->display_footer();
-    
-        echo '</body>';
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Détails Offre";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_details.css',
+                '../../public/style/footer.css'
+            ];
+            $jsFiles = [];
+            $libraries = [];
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $fields = [
+                ['label' => 'Partenaire', 'attribute' => 'partainer', 'type' => 'cle', 'class'=> 'Partenaire_controller', 'methode' =>  'get_Partenaire_by_id_controller', 'att_option_affiche' => 'nom', 'att_option_arg' => 'partainer'],
+                ['label' => 'Carte', 'attribute' => 'carte', 'type' => 'text'],
+                ['label' => 'Réduction', 'attribute' => 'reduction', 'type' => 'text'],
+                ['label' => 'Date de fin', 'attribute' => 'date_fin', 'type' => 'date'],
+                ['label' => 'Avantage', 'attribute' => 'avantage', 'type' => 'text'],
+            ];
+        
+            $controller = new Dashboard_Componant_controller();
+            $controller->display_DetailView(
+                'Offers_controller',
+                'get_Offre_by_id_controller',
+                $fields,
+                [$id],
+                'Détails de l\'Offre'
+            );
+        
+            $footer = new Footer_controller();
+            $footer->display_footer();
+        
+            echo '</body>';
+        }
     }
     public function affiche_offre_ajouter_page() {
-        $pageName = "ElMountada | Ajouter Offre";
-        $cssFiles = [
-            '../public/style/varaibles.css',
-            '../public/style/dashbord_ajouter.css',
-            '../public/style/menu_left.css'
-        ];
-        $jsFiles = ['../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('admin');
-    
-        $controller = new Dashboard_Componant_controller();
-    
-        $fields = [
-            [
-                'label' => 'Partenaire', 
-                'attribute' => 'partainer', 
-                'type' => 'select',
-                'options' => $controller->construire_Dashboard('Partenaire_controller', 'get_Partenaire_controller', [], []), 
-                'att_option_affiche' => 'nom', 
-                'att_option_return' => 'id'
-            ],
-            [
-                'label' => 'Carte', 
-                'attribute' => 'carte', 
-                'type' => 'select',
-                'options' => $controller->construire_Dashboard('Carte_controller', 'get_all_cartes', [], []), 
-                'att_option_affiche' => 'type', 
-                'att_option_return' => 'type'
-            ],
-            ['label' => 'Réduction', 'attribute' => 'reduction', 'type' => 'numbre'],
-            ['label' => 'Date de fin', 'attribute' => 'date_fin', 'type' => 'datetime-local'],
-            ['label' => 'Avantage', 'attribute' => 'avantage', 'type' => 'textarea'],
-        ];
-    
-        $controller->display_AjouterForm(
-            $fields,
-            '../admin/ajouter_offre_post',
-            'Offre_controller',
-            'ajouter_offre_controller',
-            null, // Pas de fichier image pour les offres
-            '../admin/dash_offers',
-            'Ajouter Offre'
-        );
-    
-        echo '</body>';
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Ajouter Offre";
+            $cssFiles = [
+                '../public/style/varaibles.css',
+                '../public/style/dashbord_ajouter.css',
+                '../public/style/menu_left.css'
+            ];
+            $jsFiles = ['../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('admin');
+        
+            $controller = new Dashboard_Componant_controller();
+        
+            $fields = [
+                [
+                    'label' => 'Partenaire', 
+                    'attribute' => 'partainer', 
+                    'type' => 'select',
+                    'options' => $controller->construire_Dashboard('Partenaire_controller', 'get_Partenaire_controller', [], []), 
+                    'att_option_affiche' => 'nom', 
+                    'att_option_return' => 'id'
+                ],
+                [
+                    'label' => 'Carte', 
+                    'attribute' => 'carte', 
+                    'type' => 'select',
+                    'options' => $controller->construire_Dashboard('Carte_controller', 'get_all_cartes', [], []), 
+                    'att_option_affiche' => 'type', 
+                    'att_option_return' => 'type'
+                ],
+                ['label' => 'Réduction', 'attribute' => 'reduction', 'type' => 'numbre'],
+                ['label' => 'Date de fin', 'attribute' => 'date_fin', 'type' => 'datetime-local'],
+                ['label' => 'Avantage', 'attribute' => 'avantage', 'type' => 'textarea'],
+            ];
+        
+            $controller->display_AjouterForm(
+                $fields,
+                '../admin/ajouter_offre_post',
+                'Offre_controller',
+                'ajouter_offre_controller',
+                null, // Pas de fichier image pour les offres
+                '../admin/dash_offers',
+                'Ajouter Offre'
+            );
+        
+            echo '</body>';
+        }
     }
 
     public function ajouter_offre_controller($partainer, $carte, $reduction, $date_fin, $avantage) {
@@ -262,62 +267,67 @@ class Offers_controller {
 
 
     public function affiche_offre_modifier_page($id) {
-        $pageName = "ElMountada | Modifier Offre";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_modifier.css',
-            '../../public/style/footer.css'
-        ];
-        $jsFiles = ['../../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $controller = new Dashboard_Componant_controller();
-    
-        $fields = [
-            ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
-            [
-                'label' => 'Partenaire', 
-                'attribute' => 'partainer', 
-                'type' => 'select',
-                'options' => $controller->construire_Dashboard('Partenaire_controller', 'get_Partenaire_controller', [], []), 
-                'att_option_affiche' => 'nom', 
-                'att_option_return' => 'id'
-            ],
-            [
-                'label' => 'Carte', 
-                'attribute' => 'carte', 
-                'type' => 'select',
-                'options' => $controller->construire_Dashboard('Carte_controller', 'get_all_cartes', [], []), 
-                'att_option_affiche' => 'type', 
-                'att_option_return' => 'type'
-            ],
-            ['label' => 'Réduction', 'attribute' => 'reduction', 'type' => 'numbre'],
-            ['label' => 'Date de fin', 'attribute' => 'date_fin', 'type' => 'datetime-local'],
-            ['label' => 'Avantage', 'attribute' => 'avantage', 'type' => 'textarea'],
-        ];
-    
-        $controller->display_ModifierForm(
-            'Offers_controller',
-            'get_Offre_by_id_controller',
-            $fields,
-            [$id],
-            '../../admin/modifier_offre_post',
-            'Offers_controller',
-            'modifier_offre_controller',
-            null, // Pas de fichier image pour les offres
-            '../../admin/dash_offres',
-            'Modifier Offre'
-        );
-    
-        echo '</body>';
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Modifier Offre";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_modifier.css',
+                '../../public/style/footer.css'
+            ];
+            $jsFiles = ['../../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $controller = new Dashboard_Componant_controller();
+        
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
+                [
+                    'label' => 'Partenaire', 
+                    'attribute' => 'partainer', 
+                    'type' => 'select',
+                    'options' => $controller->construire_Dashboard('Partenaire_controller', 'get_Partenaire_controller', [], []), 
+                    'att_option_affiche' => 'nom', 
+                    'att_option_return' => 'id'
+                ],
+                [
+                    'label' => 'Carte', 
+                    'attribute' => 'carte', 
+                    'type' => 'select',
+                    'options' => $controller->construire_Dashboard('Carte_controller', 'get_all_cartes', [], []), 
+                    'att_option_affiche' => 'type', 
+                    'att_option_return' => 'type'
+                ],
+                ['label' => 'Réduction', 'attribute' => 'reduction', 'type' => 'numbre'],
+                ['label' => 'Date de fin', 'attribute' => 'date_fin', 'type' => 'datetime-local'],
+                ['label' => 'Avantage', 'attribute' => 'avantage', 'type' => 'textarea'],
+            ];
+        
+            $controller->display_ModifierForm(
+                'Offers_controller',
+                'get_Offre_by_id_controller',
+                $fields,
+                [$id],
+                '../../admin/modifier_offre_post',
+                'Offers_controller',
+                'modifier_offre_controller',
+                null, // Pas de fichier image pour les offres
+                '../../admin/dash_offers',
+                'Modifier Offre'
+            );
+        
+            echo '</body>';
+        }
     }
     public function modifier_offre_controller($id,$partainer, $carte, $reduction, $date_fin, $avantage) {
         $controller = new Offres_model();
         $controller->modifier_offre_model($id,$partainer, $carte, $reduction, $date_fin, $avantage);
     }
     public function modifier_offre() {
+
         session_start();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? null;
@@ -358,7 +368,6 @@ class Offers_controller {
                 exit();
             }
         } else {
-            // Si la méthode HTTP n'est pas POST
             $_SESSION['errorsModifier'] = ["Requête invalide."];
             header('Location: ../../admin/modifier_offre/' . $id);
             exit();

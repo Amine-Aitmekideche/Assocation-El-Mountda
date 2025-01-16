@@ -4,6 +4,7 @@ require_once 'menu_composant_controller.php';
 require_once 'Footer_controller.php';
 require_once 'Head_controller.php';
 require_once 'Dashboard_Componant_controller.php';
+require_once 'User_controller.php';
 
 class Partenaire_categorie_controller {
     
@@ -74,9 +75,9 @@ class Partenaire_categorie_controller {
     }
 
     public function affiche_partenaire_categorie_dashbord_page() {
-        // $userController = new User_controller();
-            // $userId = $userController->verify_cookie('admin'); 
-            // if ($userId !== null) {
+        $userController = new User_controller();
+            $userId = $userController->verify_cookie('admin'); 
+            if ($userId !== null) {
                 $pageName = "ElMountada | News Dashboard";
                 $cssFiles = [
                     '../public/style/varaibles.css',
@@ -121,42 +122,46 @@ class Partenaire_categorie_controller {
                 'Partenaire_categorie_controller', 
                 'supprimer_categorie_controller'
             );
-        // }
+        }
     }
     public function affiche_partenaire_categorie_ajout_page() {
-        $pageName = "ElMountada | Ajouter Categorie Partenaire";
-        $cssFiles = [
-            '../public/style/varaibles.css',
-            '../public/style/dashbord_ajouter.css',
-            '../public/style/menu_left.css'
-        ];
-        $jsFiles = ['../js/scrpt.js'];
-        $libraries = ['jquery'];
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Ajouter Categorie Partenaire";
+            $cssFiles = [
+                '../public/style/varaibles.css',
+                '../public/style/dashbord_ajouter.css',
+                '../public/style/menu_left.css'
+            ];
+            $jsFiles = ['../js/scrpt.js'];
+            $libraries = ['jquery'];
+            
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
         
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('admin');
-        $controller = new Dashboard_Componant_controller();
-    
-        $fields = [
-            ['label' => 'Categorie', 'attribute' => 'categorie', 'type' => 'text'],
-            ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
-        ];
-    
-        // Appel de la fonction qui affiche le formulaire d'ajout
-        $controller->display_AjouterForm(
-            $fields, 
-            '../admin/ajouter_categorie_post', 
-            'Partenaire_categorie_controller', 
-            'ajouter_categorie_controller',
-            ' ',
-            '../admin/dash_categorie_partenaire',
-            'Ajouter Categorie Partenaire'
-        );
-    
-        echo '</body>';
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('admin');
+            $controller = new Dashboard_Componant_controller();
+        
+            $fields = [
+                ['label' => 'Categorie', 'attribute' => 'categorie', 'type' => 'text'],
+                ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
+            ];
+        
+            // Appel de la fonction qui affiche le formulaire d'ajout
+            $controller->display_AjouterForm(
+                $fields, 
+                '../admin/ajouter_categorie_post', 
+                'Partenaire_categorie_controller', 
+                'ajouter_categorie_controller',
+                ' ',
+                '../admin/dash_categorie_partenaire',
+                'Ajouter Categorie Partenaire'
+            );
+        
+            echo '</body>';
+        }
     }
     
     public function ajouter_categorie_partenaire() {
@@ -212,43 +217,47 @@ class Partenaire_categorie_controller {
     }
 
     public function affiche_partenaire_categorie_modifier_page($id) {
-        $pageName = "ElMountada | Modifier Categorie Partenaire";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_modifier.css',
-            '../../public/style/footer.css'
-        ];
-        $jsFiles = ['../../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $controller = new Dashboard_Componant_controller();
-    
-        // Définir les champs du formulaire
-        $fields = [
-            ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
-            ['label' => 'Categorie', 'attribute' => 'categorie', 'type' => 'text'],
-            ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
-        ];
-    
-        // Appel de la fonction pour afficher le formulaire de modification
-        $controller->display_ModifierForm(
-            'Partenaire_categorie_controller', 
-            'get_categorie_by_id_controller', 
-            $fields, 
-            [$id], 
-            '../../admin/modifier_categorie_post', 
-            'Partenaire_categorie_controller', 
-            'modifier_categorie_controller', 
-            ' ', 
-            '../../admin/dash_categorie_partenaire', 
-            'Modifier Categorie Partenaire'
-        );
-    
-       
-        echo '</body>';
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Modifier Categorie Partenaire";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_modifier.css',
+                '../../public/style/footer.css'
+            ];
+            $jsFiles = ['../../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $controller = new Dashboard_Componant_controller();
+        
+            // Définir les champs du formulaire
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
+                ['label' => 'Categorie', 'attribute' => 'categorie', 'type' => 'text'],
+                ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
+            ];
+        
+            // Appel de la fonction pour afficher le formulaire de modification
+            $controller->display_ModifierForm(
+                'Partenaire_categorie_controller', 
+                'get_categorie_by_id_controller', 
+                $fields, 
+                [$id], 
+                '../../admin/modifier_categorie_post', 
+                'Partenaire_categorie_controller', 
+                'modifier_categorie_controller', 
+                ' ', 
+                '../../admin/dash_categorie_partenaire', 
+                'Modifier Categorie Partenaire'
+            );
+        
+        
+            echo '</body>';
+        }
     }
     
     public function modifier_categorie_partenaire() {

@@ -81,24 +81,28 @@ class Demmande_carte_controller {
         $controller->affiche_formulaire_demmande();
     }
     public function demmande_membre_page() {
-        $pageName = "ElMountada | Demande de Carte";
-        $cssFiles = ['../public/style/variables.css', '../public/style/menu_user.css', '../public/style/demmande.css', '../public/style/footer.css'];
-        $jsFiles = ["js/script.js"];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('membre');
-    
-        // Titre principal
-        echo '<h1 class="page-title">Faire une Demande de Carte</h1>';
-    
-        $this->affiche_formulaire_demmande();
-    
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('user'); 
+            if ($userId !== null) {
+            $pageName = "ElMountada | Demande de Carte";
+            $cssFiles = ['../public/style/variables.css', '../public/style/menu_user.css', '../public/style/demmande.css', '../public/style/footer.css'];
+            $jsFiles = ["js/script.js"];
+            $libraries = ['jquery', 'icons'];
         
-        echo '</body>';
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('membre');
+        
+            // Titre principal
+            echo '<h1 class="page-title">Faire une Demande de Carte</h1>';
+        
+            $this->affiche_formulaire_demmande();
+        
+            
+            echo '</body>';
+        }
     }
 
     public function demmande_post() {
@@ -142,65 +146,69 @@ class Demmande_carte_controller {
     }
 
     public function affiche_demmande_carte_page() {
-        $pageName = "ElMountada | Dashboard des Demandes de Cartes";
-        $cssFiles = [
-            '../public/style/varaibles.css',
-            '../public/style/dashbord_table.css',
-            '../public/style/menu_left.css',
-            '../public/style/footer.css'
-        ];
-        $jsFiles = ['../js/script.js'];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        echo '<h1>Dashboard des Demandes de Cartes</h1>';
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Dashboard des Demandes de Cartes";
+            $cssFiles = [
+                '../public/style/varaibles.css',
+                '../public/style/dashbord_table.css',
+                '../public/style/menu_left.css',
+                '../public/style/footer.css'
+            ];
+            $jsFiles = ['../js/script.js'];
+            $libraries = ['jquery', 'icons'];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            echo '<h1>Dashboard des Demandes de Cartes</h1>';
 
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('admin');  
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('admin');  
 
-        $fields = [
-            ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
-            ['label' => 'Utilisateur', 'attribute' => 'user', 'type' => 'cle', 'class'=> 'User_controller', 'methode' =>  'get_membre_by_id_controller', 'att_option_affiche' => 'nom', 'att_option_arg' => 'id'],
-            ['label' => 'Type de Carte', 'attribute' => 'type', 'type' => 'text'],
-            ['label' => 'Photo', 'attribute' => 'photo', 'type' => 'image'],
-            ['label' => 'Date de Demande', 'attribute' => 'date', 'type' => 'date'],
-        ];
-    
-        $actions = [
-            [
-                'label' => 'Accepter',
-                'url' => '../admin/accepter_demmande/{id}', 
-                'class' => 'btn-accept',
-                'onclick' => "return confirm('Êtes-vous sûr de vouloir accepter cette demande ?');"
-            ],
-            [
-                'label' => 'Refuser',
-                'url' => '../admin/refuser_demmande/{id}', 
-                'class' => 'btn-reject',
-                'onclick' => "return confirm('Êtes-vous sûr de vouloir refuser cette demande ?');"
-            ],
-            [
-                'label' => 'Voir plus',
-                'url' => '../admin/details_demmande/{id}', 
-                'class' => 'btn-view'
-            ]
-        ];
-    
-        // Controller pour récupérer et afficher les données des demandes de cartes
-        $controller = new Dashboard_Componant_controller();
-        $controller->affiche_Dashbord(
-            'Demmande_carte_controller', 
-            'get_all_noeffectue_demmandes', 
-            $fields, 
-            [], 
-            $actions, 
-            'Demmande_carte_controller', 
-            'supprimer_demmande'
-        );
-    
-        echo '</body>';
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
+                ['label' => 'Utilisateur', 'attribute' => 'user', 'type' => 'cle', 'class'=> 'User_controller', 'methode' =>  'get_membre_by_id_controller', 'att_option_affiche' => 'nom', 'att_option_arg' => 'id'],
+                ['label' => 'Type de Carte', 'attribute' => 'type', 'type' => 'text'],
+                ['label' => 'Photo', 'attribute' => 'photo', 'type' => 'image'],
+                ['label' => 'Date de Demande', 'attribute' => 'date', 'type' => 'date'],
+            ];
+        
+            $actions = [
+                [
+                    'label' => 'Accepter',
+                    'url' => '../admin/accepter_demmande/{id}', 
+                    'class' => 'btn-accept',
+                    'onclick' => "return confirm('Êtes-vous sûr de vouloir accepter cette demande ?');"
+                ],
+                [
+                    'label' => 'Refuser',
+                    'url' => '../admin/refuser_demmande/{id}', 
+                    'class' => 'btn-reject',
+                    'onclick' => "return confirm('Êtes-vous sûr de vouloir refuser cette demande ?');"
+                ],
+                [
+                    'label' => 'Voir plus',
+                    'url' => '../admin/details_demmande/{id}', 
+                    'class' => 'btn-view'
+                ]
+            ];
+        
+            // Controller pour récupérer et afficher les données des demandes de cartes
+            $controller = new Dashboard_Componant_controller();
+            $controller->affiche_Dashbord(
+                'Demmande_carte_controller', 
+                'get_all_noeffectue_demmandes', 
+                $fields, 
+                [], 
+                $actions, 
+                'Demmande_carte_controller', 
+                'supprimer_demmande'
+            );
+        
+            echo '</body>';
+        }
     }
 
     public function accepter_demmande($id_demmande) {
@@ -252,41 +260,44 @@ class Demmande_carte_controller {
         $controller->changer_statut_demmande($id,$status);
     }   
     public function affiche_details_demmande_page($id) {
-        // Configuration de la page
-        $pageName = "ElMountada | Détails demmande";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_details.css',
-            '../../public/style/footer.css'
-        ];
-        $jsFiles = [];
-        $libraries = [];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Détails demmande";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_details.css',
+                '../../public/style/footer.css'
+            ];
+            $jsFiles = [];
+            $libraries = [];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
 
-        $fields = [
-            ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
-            ['label' => 'Utilisateur', 'attribute' => 'user', 'type' => 'cle', 'class'=> 'User_controller', 'methode' =>  'get_membre_by_id_controller', 'att_option_affiche' => 'nom', 'att_option_arg' => 'id'],
-            ['label' => 'Type de Carte', 'attribute' => 'type', 'type' => 'text'],
-            ['label' => 'Photo', 'attribute' => 'photo', 'type' => 'image'],
-            ['label' => 'Date de Demande', 'attribute' => 'date', 'type' => 'date'],
-        ];
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
+                ['label' => 'Utilisateur', 'attribute' => 'user', 'type' => 'cle', 'class'=> 'User_controller', 'methode' =>  'get_membre_by_id_controller', 'att_option_affiche' => 'nom', 'att_option_arg' => 'id'],
+                ['label' => 'Type de Carte', 'attribute' => 'type', 'type' => 'text'],
+                ['label' => 'Photo', 'attribute' => 'photo', 'type' => 'image'],
+                ['label' => 'Date de Demande', 'attribute' => 'date', 'type' => 'date'],
+            ];
 
-    
-        $controller = new Dashboard_Componant_controller();
-        $controller->display_DetailView(
-            'Demmande_carte_controller', 
-            'get_demmande_by_id_controller',
-            $fields,
-            [$id],
-            'Détails des demmandes'
-        );
-    
-        $footer = new Footer_controller();
-        $footer->display_footer();
-    
-        echo '</body>';
+        
+            $controller = new Dashboard_Componant_controller();
+            $controller->display_DetailView(
+                'Demmande_carte_controller', 
+                'get_demmande_by_id_controller',
+                $fields,
+                [$id],
+                'Détails des demmandes'
+            );
+        
+            $footer = new Footer_controller();
+            $footer->display_footer();
+        
+            echo '</body>';
+        }
     }
 
 

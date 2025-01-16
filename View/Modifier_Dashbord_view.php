@@ -5,7 +5,6 @@ class Modifier_Dashbord_view {
     public function display_ModifierForm($data, $fields, $action, $nomClass, $functionName,$pathFile, $rederection, $titrePage) {
         
         if (!empty($data)) {
-            // var_dump($data);
             echo '<div class="modifier-section">';
             echo '<h2>'.$titrePage.'</h2>';
             session_start();

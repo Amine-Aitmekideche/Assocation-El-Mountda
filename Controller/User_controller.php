@@ -104,10 +104,10 @@ class User_controller {
     
             switch ($user[0]['role']) {
                 case 'admin':
-                    header('Location: ./admin_dashboard');
+                    header('Location: ./admin/dash_news');
                     exit();
                 case 'partenaire':
-                    header('Location: ./editor_page');
+                    header('Location: ./partenaire');
                     exit();
                 case 'user':
                     header('Location: ./user');
@@ -275,7 +275,6 @@ class User_controller {
                         
                         exit();
                     } else {
-                        // Mot de passe incorrect
                         $_SESSION['errors'] = ["Mot de passe incorrect."];
                         header('Location: ./connexion');
                         exit();
@@ -333,10 +332,10 @@ class User_controller {
     public function envoyer_role($role) {
         switch ($role) {
             case 'admin':
-                header('Location: ./admin_dashboard');
+                header('Location: ./admin/dash_news');
                 exit();
             case 'partenaire':
-                header('Location: ./editor_page');
+                header('Location: ./partenaire');
                 exit();
             case 'user':
                 header('Location: ./user');
@@ -470,9 +469,8 @@ class User_controller {
 
 
     public function affiche_dashbord_user_page() {
-        // $userController = new User_controller();
-        // $userId = $userController->verify_cookie('admin'); 
-        // if ($userId !== null) {
+        $userId = $this->verify_cookie('admin'); 
+        if ($userId !== null) {
             $pageName = "ElMountada | Utilisateurs Dashboard";
             $cssFiles = [
                 '../public/style/varaibles.css',
@@ -534,13 +532,12 @@ class User_controller {
             $footer->display_footer();
     
             echo '</body>';
-        // }
+         }
     }
 
     public function affiche_user_block_page() {
-        // $userController = new User_controller();
-        // $userId = $userController->verify_cookie('admin'); 
-        // if ($userId !== null) {
+        $userId = $this->verify_cookie('admin'); 
+        if ($userId !== null) {
             $pageName = "ElMountada | Utilisateurs Dashboard";
             $cssFiles = [
                 '../public/style/varaibles.css',
@@ -602,107 +599,111 @@ class User_controller {
             $footer->display_footer();
     
             echo '</body>';
-        // }
+         }
     }
 
     public function affiche_details_user_page($id) {
-        // Configuration de la page
-        $pageName = "ElMountada | Détails Utilisateur";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_details.css',
-            '../../public/style/footer.css'
-        ];
-        $jsFiles = [];
-        $libraries = [];
-    
-        // Affichage de l'en-tête de la page
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        // Définition des champs à afficher
-        $fields = [
-            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
-            ['label' => 'Prénom', 'attribute' => 'prenom', 'type' => 'text'],
-            ['label' => 'Téléphone', 'attribute' => 'phone', 'type' => 'text'],
-            ['label' => 'Photo personnelle', 'attribute' => 'photo_personnel', 'type' => 'image'],
-            ['label' => 'Membre', 'attribute' => 'membr', 'type' => 'text'], 
-            ['label' => 'Date d\'ajout', 'attribute' => 'date_ajouter', 'type' => 'date'],
-            ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
-            ['label' => 'Pièce d\'identité', 'attribute' => 'piece_identite', 'type' => 'image'],
+        $userId = $this->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Détails Utilisateur";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_details.css',
+                '../../public/style/footer.css'
+            ];
+            $jsFiles = [];
+            $libraries = [];
+        
+            // Affichage de l'en-tête de la page
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $fields = [
+                ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+                ['label' => 'Prénom', 'attribute' => 'prenom', 'type' => 'text'],
+                ['label' => 'Téléphone', 'attribute' => 'phone', 'type' => 'text'],
+                ['label' => 'Photo personnelle', 'attribute' => 'photo_personnel', 'type' => 'image'],
+                ['label' => 'Membre', 'attribute' => 'membr', 'type' => 'text'], 
+                ['label' => 'Date d\'ajout', 'attribute' => 'date_ajouter', 'type' => 'date'],
+                ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
+                ['label' => 'Pièce d\'identité', 'attribute' => 'piece_identite', 'type' => 'image'],
 
-        ];
-    
-        $controller = new Dashboard_Componant_controller();
-        $controller->display_DetailView(
-            'User_controller', // Nom du contrôleur pour les utilisateurs
-            'get_membre_by_id_controller', // Méthode pour récupérer les détails de l'utilisateur
-            $fields,
-            [$id],
-            'Détails de l\'Utilisateur'
-        );
-    
-        $footer = new Footer_controller();
-        $footer->display_footer();
-    
-        echo '</body>';
+            ];
+        
+            $controller = new Dashboard_Componant_controller();
+            $controller->display_DetailView(
+                'User_controller', 
+                'get_membre_by_id_controller', 
+                $fields,
+                [$id],
+                'Détails de l\'Utilisateur'
+            );
+        
+            $footer = new Footer_controller();
+            $footer->display_footer();
+        
+            echo '</body>';
+        }
     }
 
 
     public function affiche_modifier_membre_page($id) {
-        $pageName = "ElMountada | Modifier Utilisateur";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_modifier.css',
-            '../../public/style/footer.css'
-        ];
-        $jsFiles = ['../../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $fields = [
-            ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
-            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
-            ['label' => 'Prénom', 'attribute' => 'prenom', 'type' => 'text'],
-            ['label' => 'Téléphone', 'attribute' => 'phone', 'type' => 'text'],
-            ['label' => 'Photo personnelle', 'attribute' => 'photo_personnel', 'type' => 'image'],
-            ['label' => 'Pièce d\'identité', 'attribute' => 'piece_identite', 'type' => 'image'],
-            ['label' => 'Membre', 'attribute' => 'membr', 'type' => 'select', 
-                'options' => [
-                    ['value' => 0, 'label' => 'Non'],
-                    ['value' => 1, 'label' => 'Oui']
+        $userId = $this->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Modifier Utilisateur";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_modifier.css',
+                '../../public/style/footer.css'
+            ];
+            $jsFiles = ['../../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
+                ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+                ['label' => 'Prénom', 'attribute' => 'prenom', 'type' => 'text'],
+                ['label' => 'Téléphone', 'attribute' => 'phone', 'type' => 'text'],
+                ['label' => 'Photo personnelle', 'attribute' => 'photo_personnel', 'type' => 'image'],
+                ['label' => 'Pièce d\'identité', 'attribute' => 'piece_identite', 'type' => 'image'],
+                ['label' => 'Membre', 'attribute' => 'membr', 'type' => 'select', 
+                    'options' => [
+                        ['value' => 0, 'label' => 'Non'],
+                        ['value' => 1, 'label' => 'Oui']
+                    ],
+                    'att_option_affiche' => 'label', 
+                    'att_option_return' => 'value'
                 ],
-                'att_option_affiche' => 'label', 
-                'att_option_return' => 'value'
-            ],
-            ['label' => 'Bloqué', 'attribute' => 'bloque', 'type' => 'select', 
-                'options' => [
-                    ['value' => 1, 'label' => 'Oui'],
-                    ['value' => 0, 'label' => 'Non']
+                ['label' => 'Bloqué', 'attribute' => 'bloque', 'type' => 'select', 
+                    'options' => [
+                        ['value' => 1, 'label' => 'Oui'],
+                        ['value' => 0, 'label' => 'Non']
+                    ],
+                    'att_option_affiche' => 'label', 
+                    'att_option_return' => 'value'
                 ],
-                'att_option_affiche' => 'label', 
-                'att_option_return' => 'value'
-            ],
-            ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
-            
-        ];
-    
-        $controller = new Dashboard_Componant_controller();
-        $controller->display_ModifierForm(
-            'User_controller', 
-            'get_membre_by_id_controller', 
-            $fields,
-            [$id],
-            '../../admin/modifier_membre_post', 
-            'User_controller',
-            'modifier_user_controller', 
-            'public/images/users', 
-            '../../admin/dash_users', 
-            'Modifier Utilisateur' 
-        );
-    
-        echo '</body>';
+                ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
+                
+            ];
+        
+            $controller = new Dashboard_Componant_controller();
+            $controller->display_ModifierForm(
+                'User_controller', 
+                'get_membre_by_id_controller', 
+                $fields,
+                [$id],
+                '../../admin/modifier_membre_post', 
+                'User_controller',
+                'modifier_user_controller', 
+                'public/images/users', 
+                '../../admin/dash_users', 
+                'Modifier Utilisateur' 
+            );
+        
+            echo '</body>';
+        }
     }
 
     public function modifier_membre_controller($id, $nom, $prenom, $phone, $photo_personnel, $piece_identite, $membr, $bloque, $email) {

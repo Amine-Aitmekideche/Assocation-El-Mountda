@@ -7,6 +7,7 @@ require_once 'Offers_controller.php';
 require_once 'Footer_controller.php';
 require_once 'Head_controller.php';
 require_once 'Dashboard_Componant_controller.php';
+require_once 'User_controller.php';
 class Carte_controller {
     public function get_all_cartes() {
         $model = new Carte_model();
@@ -77,53 +78,54 @@ class Carte_controller {
     }
     
     public function affiche_carte_page() {
-        $pageName = "ElMountada | Cartes";
-        $cssFiles = ['./public/style/variables.css', './public/style/menu_user.css', './public/style/carte.css', './public/style/footer.css'];
-        $jsFiles = ["js/script.js"];
-        $libraries = ['jquery', 'icons'];
-    
-        // Inclure les composants principaux (head, menu, footer)
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        // Menu utilisateur
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('user');
-    
-        // Titre principal
-        echo '<h1 class="page-title">Liste des Cartes</h1>';
-    
-        $this->affiche_cartes();
-    
-        $footer = new Footer_controller();
-        $footer->display_footer();
-        echo '</body>';
+        
+            $pageName = "ElMountada | Cartes";
+            $cssFiles = ['./public/style/variables.css', './public/style/menu_user.css', './public/style/carte.css', './public/style/footer.css'];
+            $jsFiles = ["js/script.js"];
+            $libraries = ['jquery', 'icons'];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('user');
+        
+            echo '<h1 class="page-title">Liste des Cartes</h1>';
+        
+            $this->affiche_cartes();
+        
+            $footer = new Footer_controller();
+            $footer->display_footer();
+            echo '</body>';
+        
     }
 
 
     public function affiche_offers_by_carte_page($carte) {
-        $pageName = "ElMountada | Offres pour la carte : " . htmlspecialchars($carte);
-        $cssFiles = ['../public/style/varaibles.css', '../public/style/menu_user.css', '../public/style/offer.css', '../public/style/footer.css'];
-        $jsFiles = ["js/scrpt.js"];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('user');
         
-        echo '<h1 class="page-title">Offres pour la carte : ' . htmlspecialchars($carte) . '</h1>';
-    
-        // Récupérer les offres pour la carte spécifiée
-        $offresController = new Offers_controller();
-        $offres = $offresController->display_offers_table_carte($carte); // Appeler la fonction pour récupérer les offres
-    
+            $pageName = "ElMountada | Offres pour la carte : " . htmlspecialchars($carte);
+            $cssFiles = ['../public/style/varaibles.css', '../public/style/menu_user.css', '../public/style/offer.css', '../public/style/footer.css'];
+            $jsFiles = ["js/scrpt.js"];
+            $libraries = ['jquery', 'icons'];
         
-        $menu = new Footer_controller();
-        $menu->display_footer();
-    
-        echo '</body>';
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('user');
+            
+            echo '<h1 class="page-title">Offres pour la carte : ' . htmlspecialchars($carte) . '</h1>';
+        
+            // Récupérer les offres pour la carte spécifiée
+            $offresController = new Offers_controller();
+            $offres = $offresController->display_offers_table_carte($carte); // Appeler la fonction pour récupérer les offres
+        
+            
+            $menu = new Footer_controller();
+            $menu->display_footer();
+        
+            echo '</body>';
+        
     }
     
     

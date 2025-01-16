@@ -170,14 +170,12 @@ class Offers_view {
             }
         }
     
-        // Convertir les données en JSON pour les envoyer au client
         echo '<script>';
         echo 'let allOffers = ' . json_encode($allOffers) . ';';
         echo 'let offersPerPage = 10;';
         echo 'let currentPage = 1;';
         echo '</script>';
     
-        // Affichage du tableau avec les 10 premières offres
         echo '<table class="offres-table">';
         echo '<thead>';
         echo '<tr>';
@@ -194,10 +192,8 @@ class Offers_view {
         echo '</tbody>';
         echo '</table>';
     
-        // Pagination
         echo '<div class="pagination" id="pagination-links"></div>';
     
-        // Affichage du script pour le rendu dynamique
         echo '<script>
             function renderOffersRows(pageNumber) {
                 let start = (pageNumber - 1) * offersPerPage;

@@ -68,9 +68,6 @@
         }
 
         public function affiche_news_page(){
-            // $userController = new User_controller();
-            // $userId = $userController->verify_cookie('admin'); 
-            // if ($userId !== null) {
                 $pageName = "ElMountada | News";
                 $cssFiles = ['./public/style/varaibles.css', './public/style/menu_user.css','./public/style/news.css', './public/style/footer.css'];
                 $jsFiles = [];
@@ -84,15 +81,14 @@
                 $this->affiche_news();
                 $menu = new Footer_controller();
                 $menu->display_footer();
-                echo '</body>';
-            // }           
+                echo '</body>';       
          
         }
 
         public function affiche_news_dashbord_page() {
-            // $userController = new User_controller();
-            // $userId = $userController->verify_cookie('admin'); 
-            // if ($userId !== null) {
+            $userController = new User_controller();
+            $userId = $userController->verify_cookie('admin'); 
+            if ($userId !== null) {
                 $pageName = "ElMountada | News Dashboard";
                 $cssFiles = [
                     '../public/style/varaibles.css',
@@ -135,15 +131,7 @@
                         'label' => 'Supprimer',
                         'url' => '../admin/supprimeNews/{id}',
                         'onclick' => "return confirm('Êtes-vous sûr de vouloir supprimer cette news ?');"
-                        // 'class' => 'btn-delete',
-                        // 'id' => 'action_button',
-                        // 'onclick' => '', 
-                        // 'data' => [ 
-                        //     'action' => 'supprimer',
-                        //     'nomclass' => 'News_controller',
-                        //     'functionname' => 'supprimer_news_controller',
-                        //     'pathfile' => '/public/images/news'
-                        // ],
+                        
                     ],
                 ];
         
@@ -162,13 +150,13 @@
                 $footer->display_footer();
         
                 echo '</body>';
-            // }
+            }
         }
         
         public function affiche_news_details_page($id) {
-            // $userController = new User_controller();
-            // $userId = $userController->verify_cookie('admin'); 
-            // if ($userId !== null) {
+            $userController = new User_controller();
+            $userId = $userController->verify_cookie('admin'); 
+            if ($userId !== null) {
                 $pageName = "ElMountada | News Details";
                 $cssFiles = [
                     '../../public/style/varaibles.css',
@@ -204,12 +192,12 @@
                 $footer->display_footer();
         
                 echo '</body>';
-            // }
+            }
         }
         public function affiche_news_modifier_page($id) {
-            // $userController = new User_controller();
-            // $userId = $userController->verify_cookie('admin'); 
-            // if ($userId !== null) {
+            $userController = new User_controller();
+            $userId = $userController->verify_cookie('admin'); 
+            if ($userId !== null) {
                 $pageName = "ElMountada | Modifier News";
                 $cssFiles = [
                     '../../public/style/varaibles.css',
@@ -250,7 +238,7 @@
                 $footer->display_footer();
         
                 echo '</body>';
-            // }
+             }
         }
 
         public function modifier_news() {
@@ -296,55 +284,58 @@
             }
         }
         public function affiche_news_ajout_page() {
-            $pageName = "ElMountada | Ajouter News";
-            $cssFiles = [
-                '../public/style/varaibles.css',
-                '../public/style/dashbord_ajouter.css',
-                '../public/style/menu_left.css',
-                '../public/style/Footer.css'
-            ];
-            $jsFiles = ['../js/scrpt.js'];
-            $libraries = ['jquery','icons'];
+            $userController = new User_controller();
+            $userId = $userController->verify_cookie('admin'); 
+            if ($userId !== null) {
+                $pageName = "ElMountada | Ajouter News";
+                $cssFiles = [
+                    '../public/style/varaibles.css',
+                    '../public/style/dashbord_ajouter.css',
+                    '../public/style/menu_left.css',
+                    '../public/style/Footer.css'
+                ];
+                $jsFiles = ['../js/scrpt.js'];
+                $libraries = ['jquery','icons'];
+                
+                $headController = new Head_controller();
+                $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
             
-            $headController = new Head_controller();
-            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-        
-            $menu = new menu_composant_controller();
-            $menu->display_menu_by_role('admin');
-            $controller = new Dashboard_Componant_controller();
+                $menu = new menu_composant_controller();
+                $menu->display_menu_by_role('admin');
+                $controller = new Dashboard_Componant_controller();
 
-            $fields = [
-                ['label' => 'Image', 'attribute' => 'image', 'type' => 'image'],
-                ['label' => 'Titre', 'attribute' => 'titre', 'type' => 'text'],
-                ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
-                [
-                    'label' => 'Type', 
-                    'attribute' => 'type', 
-                    'type' => 'select',
-                    'options' => $controller->construire_Dashboard('News_type_controller', 'get_News_type_controller', [], []), 
-                    'att_option_affiche' => 'type', 
-                    'att_option_return' => 'id'
-                ],
-                ['label' => 'Date Début', 'attribute' => 'date_debut', 'type' => 'datetime-local'],
-                ['label' => 'Date Fin', 'attribute' => 'date_fin', 'type' => 'datetime-local']
-            ];
-        
-            // Appel de la fonction qui affiche le formulaire d'ajout
-            $controller->display_AjouterForm(
-                $fields, 
-                '../admin/ajouter_news_post', 
-                'News_controller', 
-                'ajouter_news_controller',
-                'public/image/news',
-                '../admin/dash_news',
-                'Ajouter News'
-            );
-        
-            // Affichage du footer
-            $footer = new Footer_controller();
-            $footer->display_footer();
-        
-            echo '</body>';
+                $fields = [
+                    ['label' => 'Image', 'attribute' => 'image', 'type' => 'image'],
+                    ['label' => 'Titre', 'attribute' => 'titre', 'type' => 'text'],
+                    ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
+                    [
+                        'label' => 'Type', 
+                        'attribute' => 'type', 
+                        'type' => 'select',
+                        'options' => $controller->construire_Dashboard('News_type_controller', 'get_News_type_controller', [], []), 
+                        'att_option_affiche' => 'type', 
+                        'att_option_return' => 'id'
+                    ],
+                    ['label' => 'Date Début', 'attribute' => 'date_debut', 'type' => 'datetime-local'],
+                    ['label' => 'Date Fin', 'attribute' => 'date_fin', 'type' => 'datetime-local']
+                ];
+            
+                $controller->display_AjouterForm(
+                    $fields, 
+                    '../admin/ajouter_news_post', 
+                    'News_controller', 
+                    'ajouter_news_controller',
+                    'public/image/news',
+                    '../admin/dash_news',
+                    'Ajouter News'
+                );
+            
+                // Affichage du footer
+                $footer = new Footer_controller();
+                $footer->display_footer();
+            
+                echo '</body>';
+            }
         }
         public function ajouter_news() {
             session_start();

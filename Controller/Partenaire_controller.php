@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../Model/Partenaire_model.php';
 require_once __DIR__ . '/../View/Partainer_view.php';
 require_once __DIR__ . '/../Controller/file_controller.php';
+require_once __DIR__ . '/../Controller/User_controller.php';
 
 class Partenaire_controller {
 
@@ -79,35 +80,38 @@ class Partenaire_controller {
     
     
     public function affiche_parteners_page() {
+        
         $pageName = "ElMountada | Partenaires";
         $cssFiles = ['./public/style/varaibles.css', './public/style/menu_user.css', './public/style/parteners.css', './public/style/footer.css'];
         $jsFiles = ["js/scrpt.js"];
         $libraries = ['jquery', 'icons'];
-    
+
         $headController = new Head_controller();
         $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
+
         $menu = new menu_composant_controller();
         $menu->display_menu_by_role('user');
-    
+
         echo '<h1 class="page-title">Liste des offres par catégorie</h1>';
         echo '<div class="triFilter">';
             $this->filter_partainers();
-    
+
             echo '<div>';
                 $this->tri_partainers('triPartenerCategorie', 'Tri par Catégorie');
                 $this->tri_partainers('triPartenerWillaya', 'Tri par Ville');
             echo '</div>';
         echo '</div>';
-    
+
         $this->affiche_partainers();
-    
+
         $menu = new Footer_controller();
         $menu->display_footer();
         echo '</body>';
+        
     }
     
     public function display_partenaire_details_page($id) {
+       
         $pageName = "ElMountada | Détails Partenaire";
         $cssFiles = ['../public/style/varaibles.css', '../public/style/menu_user.css', '../public/style/partenaire_details.css','../public/style/offer.css' ,'../public/style/footer.css'];
         $jsFiles = [];
@@ -125,11 +129,12 @@ class Partenaire_controller {
         $menu = new Footer_controller();
         $menu->display_footer();
         echo '</body>';
+        
     }
     public function affiche_partenaires_dashbord_page() {
-        // $userController = new User_controller();
-        // $userId = $userController->verify_cookie('admin'); 
-        // if ($userId !== null) {
+        $userController = new User_controller();
+        $userId = $userController->verify_cookie('admin'); 
+        if ($userId !== null) {
             $pageName = "ElMountada | Partenaires Dashboard";
             $cssFiles = [
                 '../public/style/varaibles.css',
@@ -172,14 +177,6 @@ class Partenaire_controller {
                     'label' => 'Supprimer',
                     'url' => '../admin/supprimePartenaire/{id}',
                     'onclick' => "return confirm('Êtes-vous sûr de vouloir supprimer cette partenaire ?');"
-                    // 'class' => 'btn-delete',
-                    // 'id' => 'action_button',
-                    // 'onclick' => '',
-                    // 'data' => [
-                    //     'action' => 'supprimer',
-                    //     'nomclass' => 'Partenaire_controller',
-                    //     'functionname' => 'supprimer_partenaire_controller',
-                    //     'pathfile' => '/public/images/partenaires'
                    
                 ],
             ];
@@ -198,135 +195,147 @@ class Partenaire_controller {
             $footer->display_footer();
     
             echo '</body>';
-        // }
+        }
     }
 
     public function affiche_partenaire_details_page($id) {
-        $pageName = "ElMountada | Détails Partenaire";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_details.css',
-            '../../public/style/footer.css'
-        ];
-        $jsFiles = [];
-        $libraries = [];
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $fields = [
-            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
-            ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],
-            ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],
-            ['label' => 'Catégorie', 'attribute' => 'categorie', 'type' => 'text'],
-            ['label' => 'Date Ajoutée', 'attribute' => 'date_ajouter', 'type' => 'date'],
-        ];
-    
-        $controller = new Dashboard_Componant_controller();
-        $controller->display_DetailView(
-            'Partenaire_controller',
-            'get_Partenaire_by_id_controller',
-            $fields,
-            [$id],
-            'Détails du Partenaire'
-        );
-    
-        $footer = new Footer_controller();
-        $footer->display_footer();
-    
-        echo '</body>';
+        $controller = new User_controller();
+        $userId = $controller->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Détails Partenaire";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_details.css',
+                '../../public/style/footer.css'
+            ];
+            $jsFiles = [];
+            $libraries = [];
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $fields = [
+                ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+                ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],
+                ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],
+                ['label' => 'Catégorie', 'attribute' => 'categorie', 'type' => 'text'],
+                ['label' => 'Date Ajoutée', 'attribute' => 'date_ajouter', 'type' => 'date'],
+            ];
+        
+            $controller = new Dashboard_Componant_controller();
+            $controller->display_DetailView(
+                'Partenaire_controller',
+                'get_Partenaire_by_id_controller',
+                $fields,
+                [$id],
+                'Détails du Partenaire'
+            );
+        
+            $footer = new Footer_controller();
+            $footer->display_footer();
+        
+            echo '</body>';
+        }
     }
 
     public function affiche_partenaire_modifier_page($id) {
-        $pageName = "ElMountada | Modifier Partenaire";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_modifier.css',
-            '../../public/style/footer.css'
-        ];
-        $jsFiles = ['../../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $controller = new Dashboard_Componant_controller();
-    
-        $fields = [
-            ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
-            ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],  
-            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],  
-            ['label' => 'Willya', 'attribute' => 'willya', 'type' => 'text'],  
-            ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],  
-            ['label' => 'Catégorie', 'attribute' => 'categorie', 'type' => 'select', 
-                'options' => $controller->construire_Dashboard('Partenaire_categorie_controller', 'get_Partenaire_category_controller', [], []), 
-                'att_option_affiche' => 'categorie', 
-                'att_option_return' => 'categorie'],  
-            ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],  
-        ];
-    
-        $controller->display_ModifierForm(
-            'Partenaire_controller',
-            'get_Partenaire_by_id_controller',
-            $fields,
-            [$id],
-            '../../admin/modifier_partenaire_post',
-            'Partenaire_controller',
-            'modifier_partenaire_controller',
-            'public/images/partenaires',
-            '../../admin/dash_partenaires',
-            'Modifier Partenaire'
-        );
+        $controller = new User_controller();
+        $userId = $controller->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Modifier Partenaire";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_modifier.css',
+                '../../public/style/footer.css'
+            ];
+            $jsFiles = ['../../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $controller = new Dashboard_Componant_controller();
+        
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
+                ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],  
+                ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],  
+                ['label' => 'Willya', 'attribute' => 'willya', 'type' => 'text'],  
+                ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],  
+                ['label' => 'Catégorie', 'attribute' => 'categorie', 'type' => 'select', 
+                    'options' => $controller->construire_Dashboard('Partenaire_categorie_controller', 'get_Partenaire_category_controller', [], []), 
+                    'att_option_affiche' => 'categorie', 
+                    'att_option_return' => 'categorie'],  
+                ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],  
+            ];
+        
+            $controller->display_ModifierForm(
+                'Partenaire_controller',
+                'get_Partenaire_by_id_controller',
+                $fields,
+                [$id],
+                '../../admin/modifier_partenaire_post',
+                'Partenaire_controller',
+                'modifier_partenaire_controller',
+                'public/images/partenaires',
+                '../../admin/dash_partenaires',
+                'Modifier Partenaire'
+            );
 
-    
-        echo '</body>';
+        
+            echo '</body>';
+        }
     }
 
     public function affiche_partenaire_ajouter_page() {
-        $pageName = "ElMountada | Ajouter Partenaire";
-        $cssFiles = [
-            '../public/style/varaibles.css',
-            '../public/style/dashbord_ajouter.css',
-            '../public/style/menu_left.css',
-            '../public/style/Footer.css'
-        ];
-        $jsFiles = ['../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('admin');
-    
-        $controller = new Dashboard_Componant_controller();
-    
-        $fields = [
-            ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],
-            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
-            ['label' => 'Willaya', 'attribute' => 'willya', 'type' => 'text'],
-            ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],
-            [
-                'label' => 'Categorie', 
-                'attribute' => 'categorie', 
-                'type' => 'select',
-                'options' => $controller->construire_Dashboard('Partenaire_categorie_controller', 'get_Partenaire_category_controller', [], []), 
-                'att_option_affiche' => 'categorie', 
-                'att_option_return' => 'categorie'
-            ],
-            ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
-        ];
-    
-        $controller->display_AjouterForm(
-            $fields,
-            '../admin/ajouter_partenaire_post',
-            'Partenaire_controller',
-            'ajouter_partenaire_controller',
-            'public/images/partenaires',
-            '../admin/dash_partenaires',
-            'Ajouter Partenaire'
-        );
-    
-    
-        echo '</body>';
+        $controller = new User_controller();
+        $userId = $controller->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Ajouter Partenaire";
+            $cssFiles = [
+                '../public/style/varaibles.css',
+                '../public/style/dashbord_ajouter.css',
+                '../public/style/menu_left.css',
+                '../public/style/Footer.css'
+            ];
+            $jsFiles = ['../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('admin');
+        
+            $controller = new Dashboard_Componant_controller();
+        
+            $fields = [
+                ['label' => 'Logo', 'attribute' => 'logo', 'type' => 'image'],
+                ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+                ['label' => 'Willaya', 'attribute' => 'willya', 'type' => 'text'],
+                ['label' => 'Adresse', 'attribute' => 'adresse', 'type' => 'text'],
+                [
+                    'label' => 'Categorie', 
+                    'attribute' => 'categorie', 
+                    'type' => 'select',
+                    'options' => $controller->construire_Dashboard('Partenaire_categorie_controller', 'get_Partenaire_category_controller', [], []), 
+                    'att_option_affiche' => 'categorie', 
+                    'att_option_return' => 'categorie'
+                ],
+                ['label' => 'Description', 'attribute' => 'description', 'type' => 'textarea'],
+            ];
+        
+            $controller->display_AjouterForm(
+                $fields,
+                '../admin/ajouter_partenaire_post',
+                'Partenaire_controller',
+                'ajouter_partenaire_controller',
+                'public/images/partenaires',
+                '../admin/dash_partenaires',
+                'Ajouter Partenaire'
+            );
+        
+        
+            echo '</body>';
+        }
     }
     public function ajouter_partenaire() {
         session_start();
@@ -365,22 +374,22 @@ class Partenaire_controller {
                 }
             } catch (Exception $e) {
                 $_SESSION['errorsAjout'] = ["Erreur lors du téléchargement du logo : " . $e->getMessage()];
-                // header('Location: ../admin/ajoute_partanaire');
+                header('Location: ../admin/ajoute_partanaire');
                 exit();
             }
     
             if ($nom && $willya && $adresse && $categorie && $description) {
                 $this->ajouter_partenaire_controller($nom, $willya, $adresse, $categorie, $description, $logoPath);
-                // header('Location: ../admin/dash_partenaires');
+                header('Location: ../admin/dash_partenaires');
                 exit();
             } else {
                 $_SESSION['errorsAjout'] = ["Tous les champs sont obligatoires."];
-                //  header('Location: ../admin/ajoute_partanaire');
+                header('Location: ../admin/ajoute_partanaire');
                 exit();
             }
         } else {
             $_SESSION['errorsAjout'] = ["Requête invalide."];
-            // header('Location: ../admin/ajoute_partanaire');
+            header('Location: ../admin/ajoute_partanaire');
             exit();
         }
     }
@@ -467,62 +476,62 @@ class Partenaire_controller {
 
 
     public function affiche_partenaire_compte_page() {
-        // Configuration de la page
-        $pageName = "ElMountada | Partenaires et Comptes";
-        $cssFiles = [
-            '../public/style/varaibles.css',
-            '../public/style/dashbord_table.css',
-            '../public/style/menu_left.css',
-            '../public/style/Footer.css'
-        ];
-        $jsFiles = ['../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        // Afficher le menu
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('admin');
-    
-        // Récupérer les partenaires avec leurs comptes
-        $partenaires = $this->get_Partenaire_With_Compte_controller();
-    
-        // Afficher le tableau des partenaires
-        echo '<h1>Comptes desPartenaires</h1>';
-    
-        $controller = new Dashboard_Componant_controller();
-        $fields = [
-            ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
-            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
-            ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
-        ];
-    
-        $actions = [
-            [
-                'label' => 'Modifier',
-                'url' => '../admin/modifier_partenaire_compte/{id}',
-                'class' => 'btn-edit'
-            ],
-            [
-                'label' => 'Supprimer',
-                'url' => '../admin/supprimer_partenaire_compte/{id}',
-                'onclick' => "return confirm('Êtes-vous sûr de vouloir supprimer ce partenaire ?');"
-            ],
-        ];
-    
-        $controller->affiche_Dashbord(
-            'Partenaire_controller',
-            'get_Partenaire_With_Compte_controller',
-            $fields,
-            [],
-            $actions,
-            'Partenaire_controller',
-            'supprimer_partenaire_compte_controller'
-        );
-    
-       
-    
-        echo '</body>';
+        $controller = new User_controller();
+        $userId = $controller->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Partenaires et Comptes";
+            $cssFiles = [
+                '../public/style/varaibles.css',
+                '../public/style/dashbord_table.css',
+                '../public/style/menu_left.css',
+                '../public/style/Footer.css'
+            ];
+            $jsFiles = ['../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('admin');
+        
+            $partenaires = $this->get_Partenaire_With_Compte_controller();
+        
+            echo '<h1>Comptes des Partenaires</h1>';
+        
+            $controller = new Dashboard_Componant_controller();
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
+                ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
+                ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
+            ];
+        
+            $actions = [
+                [
+                    'label' => 'Modifier',
+                    'url' => '../admin/modifier_partenaire_compte/{id}',
+                    'class' => 'btn-edit'
+                ],
+                [
+                    'label' => 'Supprimer',
+                    'url' => '../admin/supprimer_partenaire_compte/{id}',
+                    'onclick' => "return confirm('Êtes-vous sûr de vouloir supprimer ce partenaire ?');"
+                ],
+            ];
+        
+            $controller->affiche_Dashbord(
+                'Partenaire_controller',
+                'get_Partenaire_With_Compte_controller',
+                $fields,
+                [],
+                $actions,
+                'Partenaire_controller',
+                'supprimer_partenaire_compte_controller'
+            );
+        
+        
+        
+            echo '</body>';
+        }
     }
     public function get_Partenaire_With_Compte_controller() {
         $model = new Partenaire_model();
@@ -531,45 +540,49 @@ class Partenaire_controller {
     }
 
     public function affiche_partenaire_compte_ajouter_page() {
-        $pageName = "ElMountada | Ajouter Partenaire Compte";
-        $cssFiles = [
-            '../public/style/varaibles.css',
-            '../public/style/dashbord_ajouter.css',
-            '../public/style/menu_left.css',
-            '../public/style/Footer.css'
-        ];
-        $jsFiles = ['../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('admin');
-    
-        $controller = new Dashboard_Componant_controller();
-    
-        $fields = [
-            ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'select', 
-                'options' => $controller->construire_Dashboard('Partenaire_controller', 'get_Partenaire_controller', [], []), 
-                'att_option_affiche' => 'nom', 
-                'att_option_return' => 'id'
-            ],
-            ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
-            ['label' => 'Mot de passe', 'attribute' => 'password', 'type' => 'password'],
-        ];
-    
-        $controller->display_AjouterForm(
-            $fields,
-            '../admin/ajouter_partenaire_compte_post_admin',
-            'Partenaire_controller',
-            'ajouter_partenaire_compte_controller',
-            'public/images/partenaires',
-            '../admin/partenaire_ajouter_compte',
-            'Ajouter Partenaire et Compte'
-        );
-    
-        echo '</body>';
+        $controller = new User_controller();
+        $userId = $controller->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Ajouter Partenaire Compte";
+            $cssFiles = [
+                '../public/style/varaibles.css',
+                '../public/style/dashbord_ajouter.css',
+                '../public/style/menu_left.css',
+                '../public/style/Footer.css'
+            ];
+            $jsFiles = ['../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('admin');
+        
+            $controller = new Dashboard_Componant_controller();
+        
+            $fields = [
+                ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'select', 
+                    'options' => $controller->construire_Dashboard('Partenaire_controller', 'get_Partenaire_controller', [], []), 
+                    'att_option_affiche' => 'nom', 
+                    'att_option_return' => 'id'
+                ],
+                ['label' => 'Email', 'attribute' => 'email', 'type' => 'text'],
+                ['label' => 'Mot de passe', 'attribute' => 'password', 'type' => 'password'],
+            ];
+        
+            $controller->display_AjouterForm(
+                $fields,
+                '../admin/ajouter_partenaire_compte_post_admin',
+                'Partenaire_controller',
+                'ajouter_partenaire_compte_controller',
+                'public/images/partenaires',
+                '../admin/partenaire_contact',
+                'Ajouter Partenaire et Compte'
+            );
+        
+            echo '</body>';
+        }
     }
     public function ajouterPartenaireCompte_controller($nom, $email, $password) {
         $controller = new Partenaire_model();
@@ -578,7 +591,6 @@ class Partenaire_controller {
     }
     public function ajouter_partenaire_compte() {
         session_start();
-        echo 'i am here';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nom = $_POST['nom'] ?? null;
             $email = $_POST['email'] ?? null;
@@ -604,45 +616,48 @@ class Partenaire_controller {
 
 
     public function affiche_partenaire_compte_modifier_page($id) {
-        $pageName = "ElMountada | Modifier Partenaire Compte";
-        $cssFiles = [
-            '../../public/style/varaibles.css',
-            '../../public/style/dashbord_modifier.css',
-            '../../public/style/menu_left.css',
-            '../../public/style/Footer.css'
-        ];
-        $jsFiles = ['../js/scrpt.js'];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-    
-        $menu = new menu_composant_controller();
-        $menu->display_menu_by_role('admin');
-    
-        $controller = new Dashboard_Componant_controller();
-    
-        $fields = [
-            ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
-            ['label' => 'Email', 'attribute' => 'email', 'type' => 'text', ],
-            ['label' => 'Nouveau mot de passe', 'attribute' => 'password', 'type' => 'password'],
-        ];
-    
-        // Affichage du formulaire de modification
-        $controller->display_ModifierForm(
-            'User_controller',
-            'get_user_by_id_controller',
-            $fields,
-            [$id],
-            '../../admin/modifier_partenaire_compte_post',
-            'Partenaire_controller',
-            'modifier_partenaire_compte_controller',
-            'public/images/partenaires',
-            '../admin/partenaires_comptes',
-            'Modifier Partenaire Compte'
-        );
-    //modifier_compte_parte_post
-        echo '</body>';
+        $controller = new User_controller();
+        $userId = $controller->verify_cookie('admin'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Modifier Partenaire Compte";
+            $cssFiles = [
+                '../../public/style/varaibles.css',
+                '../../public/style/dashbord_modifier.css',
+                '../../public/style/menu_left.css',
+                '../../public/style/Footer.css'
+            ];
+            $jsFiles = ['../js/scrpt.js'];
+            $libraries = ['jquery', 'icons'];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+        
+            $menu = new menu_composant_controller();
+            $menu->display_menu_by_role('admin');
+        
+            $controller = new Dashboard_Componant_controller();
+        
+            $fields = [
+                ['label' => 'ID', 'attribute' => 'id', 'type' => 'id'],
+                ['label' => 'Email', 'attribute' => 'email', 'type' => 'text', ],
+                ['label' => 'Nouveau mot de passe', 'attribute' => 'password', 'type' => 'password'],
+            ];
+        
+            // Affichage du formulaire de modification
+            $controller->display_ModifierForm(
+                'User_controller',
+                'get_user_by_id_controller',
+                $fields,
+                [$id],
+                '../../admin/modifier_partenaire_compte_post',
+                'Partenaire_controller',
+                'modifier_partenaire_compte_controller',
+                'public/images/partenaires',
+                '../admin/partenaires_comptes',
+                'Modifier Partenaire Compte'
+            );
+            echo '</body>';
+        }
     }
 
     public function modifier_compte_parte_post() {
@@ -706,17 +721,21 @@ class Partenaire_controller {
     }
 
     public function affiche_verifier_id_form() {
-        $pageName = "ElMountada | Vérifier Demande";
-        $cssFiles = ['./public/style/variables.css', './public/style/menu_user.css', './public/style/footer.css'];
-        $jsFiles = ["js/script.js"];
-        $libraries = ['jquery', 'icons'];
-    
-        $headController = new Head_controller();
-        $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
-        $this->affiche_verifier_id_form_controller();
-        $footer = new Footer_controller();
-        $footer->display_footer();
-        echo '</body>';
+        $controller = new User_controller();
+        $userId = $controller->verify_cookie('partenaire'); 
+        if ($userId !== null) {
+            $pageName = "ElMountada | Vérifier Demande";
+            $cssFiles = ['./public/style/variables.css', './public/style/menu_user.css', './public/style/footer.css'];
+            $jsFiles = ["js/script.js"];
+            $libraries = ['jquery', 'icons'];
+        
+            $headController = new Head_controller();
+            $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
+            $this->affiche_verifier_id_form_controller();
+            $footer = new Footer_controller();
+            $footer->display_footer();
+            echo '</body>';
+        }
     }
 
     public function affiche_verifier_id_form_controller(){

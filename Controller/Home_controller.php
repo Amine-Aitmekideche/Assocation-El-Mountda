@@ -20,33 +20,26 @@ class Home_controller {
         $jsFiles = [];
         $libraries = ['icons']; 
 
-        // Afficher le head
         $headController = new Head_controller();
         $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
 
-        // Afficher le menu
         $menu = new menu_composant_controller();
         $menu->display_menu_by_role('user');
 
-        // Afficher le diaporama de news
         $newsController = new News_controller();
         $newsController->display_news_diaporama();
 
-        // Section "Annonces et événements"
         echo '<h1>Annonces et événements</h1>';
         $newsController->display_home_news();
 
-        // Section "Avantages"
         echo '<h1>Avantages</h1>';
         $offersController = new Offers_controller();
         $offersController->display_all_offers_table_home();
 
-        // Section "Nos Partenaires"
         echo '<h1>Nos Partenaires</h1>';
         $partenaireController = new Partenaire_controller();
         $partenaireController->display_logs_diaporama();
       
-        // Afficher le pied de page
         $footer = new Footer_controller();
         $footer->display_footer();
         echo '</body>';

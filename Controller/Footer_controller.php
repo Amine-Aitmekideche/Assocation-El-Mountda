@@ -5,7 +5,7 @@
 
         public function display_footer() {
             $footerView = new Footer_view();
-            $footerView->display_footer();  // Affiche le footer
+            $footerView->display_footer();  
         }
     }
 ?>
