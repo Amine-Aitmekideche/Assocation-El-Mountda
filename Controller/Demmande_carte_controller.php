@@ -95,7 +95,6 @@ class Demmande_carte_controller {
             $menu = new menu_composant_controller();
             $menu->display_menu_by_role('membre');
         
-            // Titre principal
             echo '<h1 class="page-title">Faire une Demande de Carte</h1>';
         
             $this->affiche_formulaire_demmande();
@@ -167,6 +166,20 @@ class Demmande_carte_controller {
             $menu = new menu_composant_controller();
             $menu->display_menu_by_role('admin');  
 
+
+            session_start();
+            if (isset($_SESSION['message']) && !empty($_SESSION['message'])) {
+                echo '<div style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
+                foreach ($_SESSION['message'] as $error) {
+                    echo '<p style="margin: 0; font-size: 14px; font-family: Arial, sans-serif;">&#9888; ' . $error . '</p>';
+                }
+                echo '</div>';
+                
+                unset($_SESSION['message']);
+            }
+
+
+
             $fields = [
                 ['label' => 'ID', 'attribute' => 'id', 'type' => 'text'],
                 ['label' => 'Utilisateur', 'attribute' => 'user', 'type' => 'cle', 'class'=> 'User_controller', 'methode' =>  'get_membre_by_id_controller', 'att_option_affiche' => 'nom', 'att_option_arg' => 'id'],
@@ -195,7 +208,6 @@ class Demmande_carte_controller {
                 ]
             ];
         
-            // Controller pour récupérer et afficher les données des demandes de cartes
             $controller = new Dashboard_Componant_controller();
             $controller->affiche_Dashbord(
                 'Demmande_carte_controller', 
@@ -210,7 +222,11 @@ class Demmande_carte_controller {
             echo '</body>';
         }
     }
-
+    public function get_userid_by_id($id) {
+        $userModel = new Demmande_carte_model();
+        $user = $userModel->get_userid_by_id($id);
+        return $user;
+    }
     public function accepter_demmande($id_demmande) {
         session_start();
         
@@ -218,8 +234,11 @@ class Demmande_carte_controller {
             $result = $this->modifier_statut_demmande($id_demmande, 1);
             
             if ($result) {
-                $_SESSION['message'] = "La demande a été acceptée avec succès.";
-                header('Location: ../../admin/dash_dev_membre');
+                $controller = new User_controller();
+                $user = $this->get_userid_by_id($id_demmande);
+                $controller->membre_controller($user);
+                $_SESSION['message'] = "La demande a été acceptée avec succès. ". $user;
+                // header('Location: ../../admin/dash_dev_membre');
                 exit();
             } else {
                 $_SESSION['errors'] = ["Une erreur est survenue lors de l'acceptation de la demande."];
@@ -240,6 +259,9 @@ class Demmande_carte_controller {
             $result = $this->modifier_statut_demmande($id_demmande, 2);
             
             if ($result) {
+                $controller = new User_controller();
+                $user = $this->get_userid_by_id($id_demmande);
+                $controller->demembre_controller($user);
                 $_SESSION['message'] = "La demande a été refusée avec succès.";
                 header('Location: ../../admin/dash_dev_membre');
                 exit();

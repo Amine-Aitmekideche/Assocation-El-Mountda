@@ -145,7 +145,7 @@ class Partenier_view{
         }
     
         echo '<h1>Vérifier une Demande</h1>';
-        echo '<form method="POST" action="./partenaire/verifier/{id}">';  // Action qui sera utilisée pour soumettre le formulaire
+        echo '<form method="POST" action="">';  // Action qui sera utilisée pour soumettre le formulaire
         echo '<label for="id">ID de Membre :</label>';
         echo '<input type="text" id="id" name="id" required placeholder="Entrez l\'ID de la Membre">';
         echo '<button type="submit">Vérifier</button>';

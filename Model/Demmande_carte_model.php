@@ -51,6 +51,21 @@ class Demmande_carte_model {
         return $result;
     }
 
+    public function get_userid_by_id($id) {
+        $db = new dataBase();
+        $c = $db->connexion();
+        $qtf = "SELECT user FROM demmandeCarte WHERE id = ? ";
+        $stmt = $c->prepare($qtf);
+        $stmt = $c->prepare($qtf);
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $db->execute($stmt);
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        print_r($result);
+        $db->deconnexion($c);
+        return $result ? $result['user'] : null;
+    }
+
     public function ajouter_demmande($user, $photo, $type, $date, $accepter = 0) {
         $db = new dataBase();
         $c = $db->connexion();

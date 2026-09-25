@@ -1,12 +1,11 @@
 <?php
 class dataBase{
-    private $dbname = 'Assocaition_Elhana';
+    private $dbname = 'TDW';
     private $host = '127.0.0.1';
     private $user = 'amine';
     private $password = '13a12345';
 
     public function connexion() {
-        // Utilisation correcte des propriétés avec $this->
         $dsn = "mysql:dbname=" . $this->dbname . "; host=" . $this->host . ";port=8889";
 
         try {

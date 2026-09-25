@@ -7,7 +7,6 @@ class Dashboard_Componant_view{
         if (count($data) > 0) {
             // var_dump($data);
             echo '<div class="dashboard-section">';
-            session_start();
             if (isset($_SESSION['errorsDelite']) && !empty($_SESSION['errorsDelite'])) {
                 echo '<div style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; padding: 10px; border-radius: 5px; margin-bottom: 15px;">';
                 foreach ($_SESSION['errorsDelite'] as $error) {

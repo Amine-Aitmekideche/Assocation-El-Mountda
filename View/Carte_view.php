@@ -22,7 +22,6 @@ class Carte_view {
                 echo '<p class="no-cartes-message">Aucune carte disponible pour le moment.</p>';
             }
     
-            // Ajouter un bouton "Obtenir l'offre" après toutes les cartes
             echo '<div class="offer-button-container">';
             echo '<button class="offer-button"><a href="./user/membre_transform">Demmande un offre</a></button>';
             echo '</div>';

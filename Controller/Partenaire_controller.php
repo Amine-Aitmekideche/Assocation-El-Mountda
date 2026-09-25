@@ -732,6 +732,9 @@ class Partenaire_controller {
             $headController = new Head_controller();
             $headController->display_head_page($pageName, $cssFiles, $jsFiles, $libraries);
             $this->affiche_verifier_id_form_controller();
+
+            $this->verifier_id_et_afficher_infos();
+
             $footer = new Footer_controller();
             $footer->display_footer();
             echo '</body>';
@@ -743,6 +746,49 @@ class Partenaire_controller {
         $controller->affiche_verifier_id_form();
     }
     
+    private function verifier_id_et_afficher_infos() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
+            $userIdToCheck = htmlspecialchars(trim($_POST['user_id']));
     
+            // Étape 1 : Récupérer l'utilisateur
+            $userController = new User_controller(); 
+            $user = $userController->get_user_by_id_controller($userIdToCheck);
+    
+            if (empty($user)) {
+                echo '<div class="error-message">Utilisateur introuvable.</div>';
+                return;
+            }
+    
+            // Étape 2 : Vérifier si l'utilisateur est un membre
+            if ($user[0]['membr'] !== '1') { // Assurez-vous que la colonne `membr` existe
+                echo '<div class="error-message">Cet utilisateur n\'est pas un membre valide.</div>';
+                return;
+            }
+    
+            // Étape 3 : Vérifier si une demande a été acceptée pour cet utilisateur
+            $partenaireController = new Partenaire_controller();
+            $demande = $partenaireController->get_demmande_by_userid_controller($userIdToCheck);
+    
+            if (empty($demande)) {
+                echo '<div class="error-message">Aucune demande acceptée pour cet utilisateur.</div>';
+                return;
+            }
+    
+            // Étape 4 : Vérifier le type de carte
+            if ($user[0]['carte_type'] !== 'partenaire') { // Assurez-vous que la colonne `carte_type` existe
+                echo '<div class="error-message">Le type de carte ne correspond pas à partenaire.</div>';
+                return;
+            }
+    
+            // Étape 5 : Afficher les informations utilisateur
+            echo '<div class="user-info">';
+            echo '<h3>Informations de l\'Utilisateur</h3>';
+            echo '<p><strong>ID :</strong> ' . htmlspecialchars($user[0]['id']) . '</p>';
+            echo '<p><strong>Nom :</strong> ' . htmlspecialchars($user[0]['nom']) . '</p>';
+            echo '<p><strong>Email :</strong> ' . htmlspecialchars($user[0]['email']) . '</p>';
+            echo '<p><strong>Type de Carte :</strong> ' . htmlspecialchars($user[0]['carte_type']) . '</p>';
+            echo '</div>';
+        }
+    }
 }
-?>
+?>    

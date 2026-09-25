@@ -308,7 +308,7 @@ class User_model {
         }
     }
 
-    public function modifier_membre_model($id, $nom, $prenom, $phone, $email, $membr, $bloque, $photo_personnel , $piece_identite ) {
+    public function modifier_membre_model($id, $nom, $prenom, $phone, $email, $membr, $bloque, $photo_personnel, $piece_identite) {
         $db = new dataBase();
         $c = $db->connexion();
         try {
@@ -317,12 +317,10 @@ class User_model {
             $stmt_users = $c->prepare($query_users);
             $stmt_users->bindParam(1, $email);
             $stmt_users->bindParam(2, $id);
-            $stmt_users->execute();
+            $db->execute($stmt_users);
     
-            // Mettre à jour la table `membre` (nom, prenom, phone, membr, bloque, photo_personnel, piece_identite)
             $query_membre = "UPDATE membre SET nom = ?, prenom = ?, phone = ?, membr = ?, bloque = ?";
     
-            // Ajouter les champs optionnels (photo_personnel et piece_identite)
             if ($photo_personnel && $piece_identite) {
                 $query_membre .= ", photo_personnel = ?, piece_identite = ?";
             } elseif ($photo_personnel) {
@@ -331,18 +329,15 @@ class User_model {
                 $query_membre .= ", piece_identite = ?";
             }
     
-            // Ajouter la condition WHERE
-            $query_membre .= " WHERE user_id = ?"; // Assurez-vous que la clé étrangère est correcte
+            $query_membre .= " WHERE id = ?"; 
             $stmt_membre = $c->prepare($query_membre);
     
-            // Liaison des paramètres obligatoires
             $stmt_membre->bindParam(1, $nom);
             $stmt_membre->bindParam(2, $prenom);
             $stmt_membre->bindParam(3, $phone);
             $stmt_membre->bindParam(4, $membr);
             $stmt_membre->bindParam(5, $bloque);
     
-            // Liaison des paramètres optionnels
             if ($photo_personnel && $piece_identite) {
                 $stmt_membre->bindParam(6, $photo_personnel);
                 $stmt_membre->bindParam(7, $piece_identite);
@@ -357,14 +352,11 @@ class User_model {
                 $stmt_membre->bindParam(6, $id);
             }
     
-            // Exécution de la requête
-            $stmt_membre->execute();
+            $db->execute($stmt_membre);
     
-            // Déconnexion de la base de données
             $db->deconnexion($c);
             return true;
         } catch (Exception $e) {
-            // En cas d'erreur, déconnexion et retour false
             $db->deconnexion($c);
             return false;
         }
@@ -407,7 +399,26 @@ class User_model {
             return false;
         }
     }
-    
+    public function membre_model($id) {
+        $db = new dataBase();
+        $c = $db->connexion();
+        $qtf = "UPDATE membre SET membr = 1 WHERE id = ?";
+        $stmt = $c->prepare($qtf);
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $result = $stmt->execute();
+        $db->deconnexion($c);
+        return $result;
+    }
+    public function demembre_model($id) {
+        $db = new dataBase();
+        $c = $db->connexion();
+        $qtf = "UPDATE membre SET membr = 0 WHERE id = ?";
+        $stmt = $c->prepare($qtf);
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+        $result = $stmt->execute();
+        $db->deconnexion($c);
+        return $result;
+    }
     
 }
 ?>

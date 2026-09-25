@@ -6,6 +6,8 @@ require_once 'menu_composant_controller.php';
 require_once 'Footer_controller.php';
 require_once 'Head_controller.php';
 require_once 'Dashboard_Componant_controller.php';
+require_once 'file_controller.php';
+
 
 class User_controller {
 
@@ -44,6 +46,19 @@ class User_controller {
         
         return $user;
     }
+    public function demembre_controller($id) {
+        $userModel = new User_model();
+        $user = $userModel->demembre_model($id);
+        return $user;
+    }
+
+    public function membre_controller($id) {
+        $userModel = new User_model();
+        $user = $userModel->membre_model($id);
+        return $user;
+    }
+    
+    
     public function get_membre_by_id_controller($id) {
         $userModel = new User_model();
         $user = $userModel->get_membre_by_id_model($id);
@@ -341,7 +356,7 @@ class User_controller {
                 header('Location: ./user');
                 exit();
             default:
-                header('Location: ./connexion');
+                header('Location: http://localhost:8888/TDW/connexion');
                 exit();
         }
     }
@@ -383,7 +398,7 @@ class User_controller {
     }
 
     public function display_user_modifier_form_page() {
-        $userId = $this->verify_cookie("user"); 
+        $userId = $this->verify_cookie("user") ; 
         if ($userId !== null) {
             
             if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
@@ -666,12 +681,10 @@ class User_controller {
                 ['label' => 'Nom', 'attribute' => 'nom', 'type' => 'text'],
                 ['label' => 'Prénom', 'attribute' => 'prenom', 'type' => 'text'],
                 ['label' => 'Téléphone', 'attribute' => 'phone', 'type' => 'text'],
-                ['label' => 'Photo personnelle', 'attribute' => 'photo_personnel', 'type' => 'image'],
-                ['label' => 'Pièce d\'identité', 'attribute' => 'piece_identite', 'type' => 'image'],
                 ['label' => 'Membre', 'attribute' => 'membr', 'type' => 'select', 
                     'options' => [
-                        ['value' => 0, 'label' => 'Non'],
-                        ['value' => 1, 'label' => 'Oui']
+                        ['value' => 1, 'label' => 'Oui'],
+                        ['value' => 0, 'label' => 'Non']
                     ],
                     'att_option_affiche' => 'label', 
                     'att_option_return' => 'value'
@@ -706,7 +719,7 @@ class User_controller {
         }
     }
 
-    public function modifier_membre_controller($id, $nom, $prenom, $phone, $photo_personnel, $piece_identite, $membr, $bloque, $email) {
+    public function modifier_membre_controller ($id, $nom, $prenom, $phone, $membr, $bloque, $email , $photo_personnel, $piece_identite) {
         $controller =new User_model();
         $controller->modifier_membre_model($id, $nom, $prenom, $phone, $email, $membr, $bloque, $photo_personnel, $piece_identite);
     }
@@ -747,9 +760,13 @@ class User_controller {
                     echo '<br>';
                 }
                 if (isset($_FILES['photo_personnel']) && $_FILES['photo_personnel']['error'] === UPLOAD_ERR_OK) {
-                    $photo_personnel = file_controller::chargerFile($_FILES['photo_personnel'], $uploadDir);
-                    $photo_personnel = $uploadDir . $photo_personnel;
-                } 
+                    $photo_personnel_path = file_controller::chargerFile($_FILES['photo_personnel'], $uploadDir);
+                    if ($photo_personnel_path) {
+                        $photo_personnel = $uploadDir . $photo_personnel_path;
+                    } else {
+                        throw new Exception("Erreur lors du traitement du fichier photo_personnel.");
+                    }
+                }                
     
                 if (isset($_FILES['piece_identite']) && $_FILES['piece_identite']['error'] === UPLOAD_ERR_OK) {
                     $piece_identite = file_controller::chargerFile($_FILES['piece_identite'], $uploadDir);
@@ -760,10 +777,11 @@ class User_controller {
                 header('Location: ./modifier_user/' . $id);
                 exit();
             }
-    
+            
             if ($id && $nom && $prenom && $phone && $email) {
-                $this->modifier_membre_controller($id, $nom, $prenom, $phone, $photo_personnel, $piece_identite, $membr, $bloque, $email);
-                //  header('Location: ../admin/users');
+                echo 'gggggg' . $piece_identite,$photo_personnel;
+                $this->modifier_membre_controller ($id, $nom, $prenom, $phone, $membr, $bloque, $email , $photo_personnel, $piece_identite);
+                 header('Location: ../admin/users');
                 exit();
             } else {
                 $_SESSION['errorsModifier'] = ["Tous les champs sont obligatoires."];
